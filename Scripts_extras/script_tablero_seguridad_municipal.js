@@ -181,6 +181,7 @@ LargeCsvCargado.then(() => {
         }
       }
     },
+    plugins:plugin_actualizar_eleccion_cruzada
   });
 
   //Otra gráfica de Prueba
@@ -226,7 +227,7 @@ LargeCsvCargado.then(() => {
     },
   });
 
-  var año_sel_promesa = 2024;
+  var año_sel_promesa = 2025;
   var tipo_sel_promesa = 0;
   ///Hasta aquí ya se crearon las gráficas por default del municipio pachuca (o pacula tal vez)
   let arr_area_promesa = [];
@@ -359,7 +360,7 @@ if(datos_año_mun_delito.map((x)=>{return parseFloat((x.split(","))[4].replace(/
 data_meses_mun = {
   labels: meses,
   datasets: [{
-    label: "Total de Delitos (Aborto 2024)",
+    label: "Total de Delitos (Aborto 2025)",
     data: datos_año_mun_delito.map((x)=>{return parseFloat((x.split(","))[4].replace(/[\r\n"']/g, "").trim())}),
     fill: false,
         backgroundColor: [

@@ -19,6 +19,27 @@ select.dispatchEvent(new Event("change"));
 let data_fetched_and_splitted; // Variable global para almacenar los datos procesados
 let data_meses_estatal_fetched_and_splitted; // Variable global para almacenar los datos procesados
 let data_tasa_media_fetched_and_splitted; // Variable global para almacenar los datos procesados
+
+const plugin_actualizar_eleccion_cruzada=[{
+  id: 'customEventListener',
+  afterEvent: (chart, evt) => {
+      console.log("Evento detectado:", evt.event.type);
+      if (evt.event.type == 'click') {
+          const points = chart.getElementsAtEventForMode(evt.event, 'y', { intersect: false }, true);
+          if (points.length > 0) {
+              const datasetIndex = points[0].datasetIndex;  // Índice del dataset
+              const index = points[0].index;  // Índice de la barra clickeada
+              
+              let label = chart.data.labels[index];  // Obtener etiqueta de la barra
+              console.log(label)
+              
+
+              document.getElementById('tipo_dropdown').value = label.replace('...','');  // Cambiar el valor del dropdown
+              document.getElementById('tipo_dropdown').dispatchEvent(new Event('change'));
+          }
+      }
+  }
+}]
 let csvTasaMedia = new Promise((resolve, reject) => {
   fetch("Datos/CSVs_2/tasa_media_nacional.csv")
     .then((response) => response.text())
@@ -131,6 +152,10 @@ const sub_labels_clasificacion={
   'Otros delitos que atentan contra la libertad y la seguridad sexual': 'Estupro, Ultraje a la moral pública, Exhibicionismo obseno, Lenocinio',
   'Otros delitos que atentan contra la vida y la integridad corporal':'Inducción o Ayuda al suicidio, Peligro de contagio, Inseminación artificial no consentida'
 }
+const inverted_sub_labels = Object.fromEntries(
+  Object.entries(sub_labels_clasificacion).map(([key, value]) => [value, key])
+);
+
 Promise.all([csvCargado,csvTasaMedia]).then(() => {
   //Aquí alimentamos las gráficas por default. Y de paso nos aseguramos que los csv ya se leyeron.
   //Esto nada más ocurre la primera vez----
@@ -234,11 +259,12 @@ Promise.all([csvCargado,csvTasaMedia]).then(() => {
         }
       }
     },
+    plugins: plugin_actualizar_eleccion_cruzada
     
   });
 
   //Otra gráfica de Prueba
-  let primer_historico = generate_values_Tipo(1);//aquí sí te pide eliminar el header
+  let primer_historico = generate_values_Tipo(1);
   //console.log("Primeros historico:", primer_historico);
   const ctx_hist = document
     .getElementById("lineplot_año_por_tipo_estatal")

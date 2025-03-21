@@ -142,7 +142,6 @@ function onEachFeature_h(feature, layer) {
     
 }
 
-
 var info = L.control();
 
 info.onAdd = function (map_h) {
@@ -184,7 +183,7 @@ legend_h.onAdd = function (map) {
     // Agregar el título y el gradiente
     div.innerHTML =
     '<strong>Tasa de delitos por cada mil habitantes</strong><br>' +
-    '<div style="width: 20vw; height: 10px; background: ' + gradient + ';"></div>';
+    '<div style="width: 10vw; height: 10px; background: ' + gradient + ';"></div>';
 
     // Agregar los valores de referencia debajo del gradiente
     

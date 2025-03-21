@@ -1,3 +1,4 @@
+toString
 //---------------------------------------------------
 $("#año_dropdown").change(function () {
   //Cambia el valor del año. //O sea que solo actualizamos las gráficas superiores
@@ -119,6 +120,7 @@ $("#año_dropdown").change(function () {
         }
       }
     },
+    plugins: plugin_actualizar_eleccion_cruzada
   });
 
   //El código está bien pero los cambios de display no se reflejan directamente.
@@ -161,7 +163,7 @@ $("#tipo_dropdown").change(function () {
           borderColor: "rgba(0, 0, 0, 0.8)",
           borderWidth: 1,
           spanGaps: true,
-          label: ["Promedio Nacional"],
+          label: ["Tasa Media Nacional"],
         },
       ],
     },
@@ -325,7 +327,8 @@ Promesa_Actual_Actualizamos_Area.then(()=>{
     layer.bindTooltip(
       'Municipio: ' + layer.feature.properties.NOM_MUN + '<br>' +
       'Ranking: ' + layer.feature.properties.COV_ID + '<br>' +
-      'Tasa de delitos por cada mil: ' + layer.feature.properties.COV_ + '<br>'
+      'Tasa de delitos por cada mil: ' + layer.feature.properties.COV_ + '<br>'+
+      'Delitos registrados (seleccionado): ' + layer.feature.properties.PERIMETER
     )});
   poligonos_map_h.resetStyle()
 })
