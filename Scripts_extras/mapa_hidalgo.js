@@ -152,7 +152,7 @@ info.onAdd = function (map_h) {
 
 // method that we will use to update the control based on feature properties passed
 info.update = function (props) {
-    this._div.innerHTML = '<h1>'+(props? props.NOM_MUN: 'Pachuca de Soto')+'</h1>'+'<h4>'+'Municipio Seleccionado'+'</h4>' 
+    this._div.innerHTML = '<h1 style="font-size:large">'+(props? props.NOM_MUN: 'Pachuca de Soto')+'</h1>'+'<h4>'+'Municipio Seleccionado'+'</h4>' 
 };
 
 info.addTo(map_h);

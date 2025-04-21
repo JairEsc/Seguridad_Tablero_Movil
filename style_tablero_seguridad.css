@@ -58,6 +58,12 @@ body {
     top: auto !important;
     left: 0; 
     z-index: 1000; 
+    max-width: 175px;
+    max-height: 73px;
+    font-size: large !important;
+}
+  .leaflet-control-search .search-tooltip h1 {
+    font-size: large !important;
 }
 .canva_de_chartjs{
   position: relative;
