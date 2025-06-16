@@ -199,7 +199,7 @@ L.Control.Watermark = L.Control.extend({
         var img = L.DomUtil.create('img');
 
         img.src = 'Datos/logo lab.png';
-        img.style.width = '14vw';
+        img.style.width = '20vw';
         img.style.marginBottom = '4vh';
 
         return img;
