@@ -344,10 +344,10 @@ stackedBar.destroy();
 document.getElementById('barplot_meses').style.backgroundImage='none'
 data_meses.datasets[0].data = meses_actual_est.map((x)=>{return parseFloat((x.split(","))[3].replace(/[\r\n"']/g, "").trim())});
 data_meses.datasets[0].label = 'Delitos en Hidalgo ('+valor_tipo+' '+valor_año+')'
-console.log("Nuevos datos de meses: ")
-console.log(data_meses.datasets[0].data)
+//console.log("Nuevos datos de meses: ")
+//console.log(data_meses.datasets[0].data)
 if(data_meses.datasets[0].data.reduce((partialSum, a) => partialSum + a, 0)==0){
-  console.log("era cero")
+  //console.log("era cero")
   document.getElementById('barplot_meses').style.backgroundImage='url(Datos/no_data.png)';
 }
 
@@ -380,13 +380,13 @@ let meses_actual_mun = generate_values_Año_Mun_Tipo(
 );
 stackedBar_meses.destroy();
 data_meses_mun.datasets[0].data = meses_actual_mun.map((x)=>{return parseFloat((x.split(","))[4].replace(/[\r\n"']/g, "").trim())});
-console.log("datos mensuales: ")
-console.log(meses_actual_mun)
+//console.log("datos mensuales: ")
+//console.log(meses_actual_mun)
 document.getElementById('barplot_meses_mun').style.backgroundImage='none'
 
 data_meses_mun.datasets[0].label = 'Total de Delitos ('+valor_tipo+' '+valor_año+')'
 if(data_meses_mun.datasets[0].data.reduce((partialSum, a) => partialSum + a, 0)==0){
-  console.log("era cero")
+  //console.log("era cero")
   document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
 }
 const ctx_meses_mun = document

@@ -9,7 +9,7 @@ cambiar_display=function(id,display_new){
 }
 if(Math.min(window.screen.width, window.screen.height) < 768
 ){
-    console.log("F")
+    //console.log("F")
     //procedemos a cambiar styles
     ids_cambiar_tamaño=[
         'contenedor_global',//'100vw',50

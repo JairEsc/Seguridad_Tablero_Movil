@@ -106,7 +106,7 @@ function highlightFeature(e) {
 }
 function click_on_feature(e) {
     var layer = e.target;
-    console.log(e.target.feature.properties.NOM_MUN)
+    //console.log(e.target.feature.properties.NOM_MUN)
     layer.bringToFront();
     municipio_actual=municipios.indexOf(e.target.feature.properties.NOM_MUN)
     //Forzar el cambio en cada grafica
@@ -183,7 +183,7 @@ legend_h.onAdd = function (map) {
     // Agregar el título y el gradiente
     div.innerHTML =
     '<strong>Tasa de delitos por cada mil habitantes</strong><br>' +
-    '<div style="width: 10vw; height: 10px; background: ' + gradient + ';"></div>';
+    '<div style="height: 10px; background: ' + gradient + ';"></div>';
 
     // Agregar los valores de referencia debajo del gradiente
     

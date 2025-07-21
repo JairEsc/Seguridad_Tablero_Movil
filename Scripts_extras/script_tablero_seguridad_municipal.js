@@ -29,10 +29,10 @@ generate_values_Mun_Año = function (year_sel, municipio_sel) {
   if (!data_municipal_fetched_and_splitted) {
     return [];
   }
-  console.log("MUNICIPAL. datos incidencia dado año y municipio")
-  console.log(data_municipal_fetched_and_splitted
-    .slice(inicio, fin)
-    .slice(40 * municipio_sel, 40 * (municipio_sel + 1)))
+  //console.log("MUNICIPAL. datos incidencia dado año y municipio")
+  //console.log(data_municipal_fetched_and_splitted
+    //.slice(inicio, fin)
+    //.slice(40 * municipio_sel, 40 * (municipio_sel + 1)))
   return data_municipal_fetched_and_splitted
     .slice(inicio, fin)//filtro al año
     .slice(40 * municipio_sel, 40 * (municipio_sel + 1))//filtro al municipio
@@ -58,7 +58,7 @@ generate_values_Mun_Año = function (year_sel, municipio_sel) {
 generate_values_Mun_Tipo = function (tipo_sel, municipio_sel) {
   //el municipio es numerico,  desde cero(acatlán) hasta 83 zimapán
   //Codigo para generar valores al seleccionar el año en la pestaña: 'historico_entidad'
-  console.log("MUNICIPAL. datos historico dado tipo de delito y municipio")
+  //console.log("MUNICIPAL. datos historico dado tipo de delito y municipio")
 
   arr = [];
   año=[]
@@ -80,11 +80,11 @@ generate_values_Mun_Tipo = function (tipo_sel, municipio_sel) {
       w * 40 * 84 + tipo_sel + 40 * municipio_sel
     ])
   }
-  console.log(año)
+  //console.log(año)
   return arr;
 };
 generate_values_Año_Mun_Tipo = function (year_sel, municipio_sel,tipo_sel) {
-  console.log("MUNICIPAL. datos de___ dado año, municipio y tipo de delito")
+  //console.log("MUNICIPAL. datos de___ dado año, municipio y tipo de delito")
   year_sel_modulo2015=(year_sel-2015)
   //el municipio es numerico,  desde cero(acatlán) hasta 83 zimapán
   //Codigo para generar valores al seleccionar el año en la pestaña: 'historico_entidad'
@@ -354,7 +354,7 @@ VeryLargeCsvCargado.then(()=>{
 const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 //revisa si los datos son constantes. 
 if(datos_año_mun_delito.map((x)=>{return parseFloat((x.split(","))[4].replace(/[\r\n"']/g, "").trim())}).reduce((partialSum, a) => partialSum + a, 0)==0){
-  console.log("era cero")
+  //console.log("era cero")
   document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
 }
 data_meses_mun = {

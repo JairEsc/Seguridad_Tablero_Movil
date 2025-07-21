@@ -91,7 +91,7 @@ generate_values_meses_estatal = function (year_sel,delito_sel) {//datos para gr�
 .slice(12*delito_sel,12*(delito_sel+1)))
 }
 generate_values_Año = function (year_sel) {
-  console.log("ESTATAL: datos para gráfica de tipos de delito dado año")
+  //console.log("ESTATAL: datos para gráfica de tipos de delito dado año")
 
   //Codigo para generar valores al seleccionar el año en la pestaña: 'barplot_entidad'
   const inicio = 40 * (year_sel - 2015) + 1;
@@ -182,7 +182,7 @@ Promise.all([csvCargado,csvTasaMedia]).then(() => {
 
   ///
   let primeros40 = generate_values_Año(2025);
-  console.log("Primeros 40 valores:", primeros40);
+  //console.log("Primeros 40 valores:", primeros40);
 
   primeros40_ordenados_estatal=ordenarPorValores(tipos_de_delito,primeros40.map((x)=> {return(x)}))//filtrar valores muy pequeños?
 
