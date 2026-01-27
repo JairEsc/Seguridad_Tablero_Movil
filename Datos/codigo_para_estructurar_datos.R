@@ -38,7 +38,7 @@ intercensal_mun_2020=intercensal_mun_2020|>
   dplyr::filter(!is.na(Municipio)& Municipio!='Estatal')
 
 ##Le pegamos la poblacion a cada bloque de 5 años. 
-datos_estatal_2025=read.csv("../Municipal-Delitos - Septiembre 2025 (2015-2025).csv",check.names = F,fileEncoding = "latin1")
+datos_estatal_2025=read.csv("Municipal-Delitos-2015-2025_dic2025/Municipal-Delitos-2015-2025_dic2025.csv",check.names = F,fileEncoding = "latin1")
 datos_estatal_2025$total=rowSums(datos_estatal_2025|>dplyr::select(Enero:Diciembre),na.rm = T)
 datos_estatal_2025=datos_estatal_2025|>
   dplyr::select(Año,Entidad,`Tipo de delito`,Enero:total)|>
@@ -57,7 +57,7 @@ datos_estatal_2025=datos_estatal_2025|>
 
 
 ######################Lo mismo pero para la municipal
-datos_municipal_2025=read.csv("../Municipal-Delitos - Septiembre 2025 (2015-2025).csv",check.names = T,fileEncoding = "latin1")
+datos_municipal_2025=read.csv("Municipal-Delitos-2015-2025_dic2025/Municipal-Delitos-2015-2025_dic2025.csv",check.names = T,fileEncoding = "latin1")
 hidalgo_municipal_2025=datos_municipal_2025|>
   dplyr::filter(Clave_Ent==13)
 

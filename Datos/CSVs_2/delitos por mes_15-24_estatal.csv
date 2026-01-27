@@ -4809,7 +4809,7 @@
 2025,"Aborto","Agosto",1
 2025,"Aborto","Septiembre",2
 2025,"Aborto","Octubre",1
-2025,"Aborto","Noviembre",0
+2025,"Aborto","Noviembre",2
 2025,"Aborto","Diciembre",0
 2025,"Abuso de confianza","Enero",2
 2025,"Abuso de confianza","Febrero",28
@@ -4821,8 +4821,8 @@
 2025,"Abuso de confianza","Agosto",61
 2025,"Abuso de confianza","Septiembre",47
 2025,"Abuso de confianza","Octubre",56
-2025,"Abuso de confianza","Noviembre",0
-2025,"Abuso de confianza","Diciembre",0
+2025,"Abuso de confianza","Noviembre",48
+2025,"Abuso de confianza","Diciembre",42
 2025,"Abuso sexual","Enero",53
 2025,"Abuso sexual","Febrero",56
 2025,"Abuso sexual","Marzo",60
@@ -4833,8 +4833,8 @@
 2025,"Abuso sexual","Agosto",70
 2025,"Abuso sexual","Septiembre",67
 2025,"Abuso sexual","Octubre",69
-2025,"Abuso sexual","Noviembre",0
-2025,"Abuso sexual","Diciembre",0
+2025,"Abuso sexual","Noviembre",66
+2025,"Abuso sexual","Diciembre",59
 2025,"Acoso sexual","Enero",1
 2025,"Acoso sexual","Febrero",0
 2025,"Acoso sexual","Marzo",1
@@ -4857,8 +4857,8 @@
 2025,"Allanamiento de morada","Agosto",29
 2025,"Allanamiento de morada","Septiembre",21
 2025,"Allanamiento de morada","Octubre",30
-2025,"Allanamiento de morada","Noviembre",0
-2025,"Allanamiento de morada","Diciembre",0
+2025,"Allanamiento de morada","Noviembre",37
+2025,"Allanamiento de morada","Diciembre",18
 2025,"Amenazas","Enero",267
 2025,"Amenazas","Febrero",261
 2025,"Amenazas","Marzo",282
@@ -4869,8 +4869,8 @@
 2025,"Amenazas","Agosto",453
 2025,"Amenazas","Septiembre",493
 2025,"Amenazas","Octubre",491
-2025,"Amenazas","Noviembre",0
-2025,"Amenazas","Diciembre",0
+2025,"Amenazas","Noviembre",432
+2025,"Amenazas","Diciembre",366
 2025,"Contra el medio ambiente","Enero",0
 2025,"Contra el medio ambiente","Febrero",0
 2025,"Contra el medio ambiente","Marzo",0
@@ -4881,8 +4881,8 @@
 2025,"Contra el medio ambiente","Agosto",2
 2025,"Contra el medio ambiente","Septiembre",1
 2025,"Contra el medio ambiente","Octubre",0
-2025,"Contra el medio ambiente","Noviembre",0
-2025,"Contra el medio ambiente","Diciembre",0
+2025,"Contra el medio ambiente","Noviembre",8
+2025,"Contra el medio ambiente","Diciembre",8
 2025,"Corrupción de menores","Enero",4
 2025,"Corrupción de menores","Febrero",8
 2025,"Corrupción de menores","Marzo",7
@@ -4893,8 +4893,8 @@
 2025,"Corrupción de menores","Agosto",10
 2025,"Corrupción de menores","Septiembre",8
 2025,"Corrupción de menores","Octubre",13
-2025,"Corrupción de menores","Noviembre",0
-2025,"Corrupción de menores","Diciembre",0
+2025,"Corrupción de menores","Noviembre",8
+2025,"Corrupción de menores","Diciembre",6
 2025,"Daño a la propiedad","Enero",218
 2025,"Daño a la propiedad","Febrero",198
 2025,"Daño a la propiedad","Marzo",224
@@ -4905,8 +4905,8 @@
 2025,"Daño a la propiedad","Agosto",312
 2025,"Daño a la propiedad","Septiembre",329
 2025,"Daño a la propiedad","Octubre",322
-2025,"Daño a la propiedad","Noviembre",0
-2025,"Daño a la propiedad","Diciembre",0
+2025,"Daño a la propiedad","Noviembre",292
+2025,"Daño a la propiedad","Diciembre",257
 2025,"Delitos cometidos por servidores públicos","Enero",48
 2025,"Delitos cometidos por servidores públicos","Febrero",32
 2025,"Delitos cometidos por servidores públicos","Marzo",40
@@ -4917,8 +4917,8 @@
 2025,"Delitos cometidos por servidores públicos","Agosto",82
 2025,"Delitos cometidos por servidores públicos","Septiembre",82
 2025,"Delitos cometidos por servidores públicos","Octubre",93
-2025,"Delitos cometidos por servidores públicos","Noviembre",0
-2025,"Delitos cometidos por servidores públicos","Diciembre",0
+2025,"Delitos cometidos por servidores públicos","Noviembre",67
+2025,"Delitos cometidos por servidores públicos","Diciembre",64
 2025,"Despojo","Enero",53
 2025,"Despojo","Febrero",65
 2025,"Despojo","Marzo",75
@@ -4929,8 +4929,8 @@
 2025,"Despojo","Agosto",114
 2025,"Despojo","Septiembre",101
 2025,"Despojo","Octubre",80
-2025,"Despojo","Noviembre",0
-2025,"Despojo","Diciembre",0
+2025,"Despojo","Noviembre",84
+2025,"Despojo","Diciembre",85
 2025,"Electorales","Enero",0
 2025,"Electorales","Febrero",0
 2025,"Electorales","Marzo",5
@@ -4941,8 +4941,8 @@
 2025,"Electorales","Agosto",2
 2025,"Electorales","Septiembre",1
 2025,"Electorales","Octubre",1
-2025,"Electorales","Noviembre",0
-2025,"Electorales","Diciembre",0
+2025,"Electorales","Noviembre",1
+2025,"Electorales","Diciembre",4
 2025,"Evasión de presos","Enero",0
 2025,"Evasión de presos","Febrero",0
 2025,"Evasión de presos","Marzo",0
@@ -4965,8 +4965,8 @@
 2025,"Extorsión","Agosto",7
 2025,"Extorsión","Septiembre",13
 2025,"Extorsión","Octubre",6
-2025,"Extorsión","Noviembre",0
-2025,"Extorsión","Diciembre",0
+2025,"Extorsión","Noviembre",7
+2025,"Extorsión","Diciembre",3
 2025,"Falsedad","Enero",17
 2025,"Falsedad","Febrero",14
 2025,"Falsedad","Marzo",16
@@ -4977,8 +4977,8 @@
 2025,"Falsedad","Agosto",21
 2025,"Falsedad","Septiembre",16
 2025,"Falsedad","Octubre",29
-2025,"Falsedad","Noviembre",0
-2025,"Falsedad","Diciembre",0
+2025,"Falsedad","Noviembre",21
+2025,"Falsedad","Diciembre",14
 2025,"Falsificación","Enero",23
 2025,"Falsificación","Febrero",27
 2025,"Falsificación","Marzo",19
@@ -4989,8 +4989,8 @@
 2025,"Falsificación","Agosto",25
 2025,"Falsificación","Septiembre",23
 2025,"Falsificación","Octubre",27
-2025,"Falsificación","Noviembre",0
-2025,"Falsificación","Diciembre",0
+2025,"Falsificación","Noviembre",22
+2025,"Falsificación","Diciembre",17
 2025,"Feminicidio","Enero",3
 2025,"Feminicidio","Febrero",1
 2025,"Feminicidio","Marzo",2
@@ -5013,8 +5013,8 @@
 2025,"Fraude","Agosto",227
 2025,"Fraude","Septiembre",232
 2025,"Fraude","Octubre",190
-2025,"Fraude","Noviembre",0
-2025,"Fraude","Diciembre",0
+2025,"Fraude","Noviembre",215
+2025,"Fraude","Diciembre",228
 2025,"Homicidio","Enero",34
 2025,"Homicidio","Febrero",35
 2025,"Homicidio","Marzo",38
@@ -5025,8 +5025,8 @@
 2025,"Homicidio","Agosto",35
 2025,"Homicidio","Septiembre",39
 2025,"Homicidio","Octubre",30
-2025,"Homicidio","Noviembre",0
-2025,"Homicidio","Diciembre",0
+2025,"Homicidio","Noviembre",43
+2025,"Homicidio","Diciembre",26
 2025,"Hostigamiento sexual","Enero",16
 2025,"Hostigamiento sexual","Febrero",22
 2025,"Hostigamiento sexual","Marzo",26
@@ -5037,8 +5037,8 @@
 2025,"Hostigamiento sexual","Agosto",22
 2025,"Hostigamiento sexual","Septiembre",22
 2025,"Hostigamiento sexual","Octubre",27
-2025,"Hostigamiento sexual","Noviembre",0
-2025,"Hostigamiento sexual","Diciembre",0
+2025,"Hostigamiento sexual","Noviembre",22
+2025,"Hostigamiento sexual","Diciembre",18
 2025,"Incesto","Enero",0
 2025,"Incesto","Febrero",0
 2025,"Incesto","Marzo",0
@@ -5061,8 +5061,8 @@
 2025,"Incumplimiento de obligaciones de asistencia familiar","Agosto",110
 2025,"Incumplimiento de obligaciones de asistencia familiar","Septiembre",125
 2025,"Incumplimiento de obligaciones de asistencia familiar","Octubre",151
-2025,"Incumplimiento de obligaciones de asistencia familiar","Noviembre",0
-2025,"Incumplimiento de obligaciones de asistencia familiar","Diciembre",0
+2025,"Incumplimiento de obligaciones de asistencia familiar","Noviembre",126
+2025,"Incumplimiento de obligaciones de asistencia familiar","Diciembre",92
 2025,"Lesiones","Enero",431
 2025,"Lesiones","Febrero",375
 2025,"Lesiones","Marzo",461
@@ -5073,8 +5073,8 @@
 2025,"Lesiones","Agosto",647
 2025,"Lesiones","Septiembre",723
 2025,"Lesiones","Octubre",763
-2025,"Lesiones","Noviembre",0
-2025,"Lesiones","Diciembre",0
+2025,"Lesiones","Noviembre",682
+2025,"Lesiones","Diciembre",634
 2025,"Narcomenudeo","Enero",80
 2025,"Narcomenudeo","Febrero",66
 2025,"Narcomenudeo","Marzo",65
@@ -5085,8 +5085,8 @@
 2025,"Narcomenudeo","Agosto",81
 2025,"Narcomenudeo","Septiembre",65
 2025,"Narcomenudeo","Octubre",74
-2025,"Narcomenudeo","Noviembre",0
-2025,"Narcomenudeo","Diciembre",0
+2025,"Narcomenudeo","Noviembre",76
+2025,"Narcomenudeo","Diciembre",71
 2025,"Otros delitos contra el patrimonio","Enero",42
 2025,"Otros delitos contra el patrimonio","Febrero",41
 2025,"Otros delitos contra el patrimonio","Marzo",46
@@ -5097,8 +5097,8 @@
 2025,"Otros delitos contra el patrimonio","Agosto",204
 2025,"Otros delitos contra el patrimonio","Septiembre",227
 2025,"Otros delitos contra el patrimonio","Octubre",220
-2025,"Otros delitos contra el patrimonio","Noviembre",0
-2025,"Otros delitos contra el patrimonio","Diciembre",0
+2025,"Otros delitos contra el patrimonio","Noviembre",55
+2025,"Otros delitos contra el patrimonio","Diciembre",50
 2025,"Otros delitos contra la familia","Enero",0
 2025,"Otros delitos contra la familia","Febrero",0
 2025,"Otros delitos contra la familia","Marzo",0
@@ -5121,8 +5121,8 @@
 2025,"Otros delitos contra la sociedad","Agosto",4
 2025,"Otros delitos contra la sociedad","Septiembre",2
 2025,"Otros delitos contra la sociedad","Octubre",3
-2025,"Otros delitos contra la sociedad","Noviembre",0
-2025,"Otros delitos contra la sociedad","Diciembre",0
+2025,"Otros delitos contra la sociedad","Noviembre",3
+2025,"Otros delitos contra la sociedad","Diciembre",1
 2025,"Otros delitos del Fuero Común","Enero",1461
 2025,"Otros delitos del Fuero Común","Febrero",1157
 2025,"Otros delitos del Fuero Común","Marzo",1304
@@ -5133,8 +5133,8 @@
 2025,"Otros delitos del Fuero Común","Agosto",296
 2025,"Otros delitos del Fuero Común","Septiembre",281
 2025,"Otros delitos del Fuero Común","Octubre",287
-2025,"Otros delitos del Fuero Común","Noviembre",0
-2025,"Otros delitos del Fuero Común","Diciembre",0
+2025,"Otros delitos del Fuero Común","Noviembre",464
+2025,"Otros delitos del Fuero Común","Diciembre",440
 2025,"Otros delitos que atentan contra la libertad personal","Enero",125
 2025,"Otros delitos que atentan contra la libertad personal","Febrero",112
 2025,"Otros delitos que atentan contra la libertad personal","Marzo",156
@@ -5145,8 +5145,8 @@
 2025,"Otros delitos que atentan contra la libertad personal","Agosto",171
 2025,"Otros delitos que atentan contra la libertad personal","Septiembre",184
 2025,"Otros delitos que atentan contra la libertad personal","Octubre",184
-2025,"Otros delitos que atentan contra la libertad personal","Noviembre",0
-2025,"Otros delitos que atentan contra la libertad personal","Diciembre",0
+2025,"Otros delitos que atentan contra la libertad personal","Noviembre",91
+2025,"Otros delitos que atentan contra la libertad personal","Diciembre",95
 2025,"Otros delitos que atentan contra la libertad y la seguridad sexual","Enero",21
 2025,"Otros delitos que atentan contra la libertad y la seguridad sexual","Febrero",21
 2025,"Otros delitos que atentan contra la libertad y la seguridad sexual","Marzo",30
@@ -5157,8 +5157,8 @@
 2025,"Otros delitos que atentan contra la libertad y la seguridad sexual","Agosto",37
 2025,"Otros delitos que atentan contra la libertad y la seguridad sexual","Septiembre",56
 2025,"Otros delitos que atentan contra la libertad y la seguridad sexual","Octubre",51
-2025,"Otros delitos que atentan contra la libertad y la seguridad sexual","Noviembre",0
-2025,"Otros delitos que atentan contra la libertad y la seguridad sexual","Diciembre",0
+2025,"Otros delitos que atentan contra la libertad y la seguridad sexual","Noviembre",24
+2025,"Otros delitos que atentan contra la libertad y la seguridad sexual","Diciembre",29
 2025,"Otros delitos que atentan contra la vida y la integridad corporal","Enero",8
 2025,"Otros delitos que atentan contra la vida y la integridad corporal","Febrero",9
 2025,"Otros delitos que atentan contra la vida y la integridad corporal","Marzo",13
@@ -5169,8 +5169,8 @@
 2025,"Otros delitos que atentan contra la vida y la integridad corporal","Agosto",59
 2025,"Otros delitos que atentan contra la vida y la integridad corporal","Septiembre",41
 2025,"Otros delitos que atentan contra la vida y la integridad corporal","Octubre",67
-2025,"Otros delitos que atentan contra la vida y la integridad corporal","Noviembre",0
-2025,"Otros delitos que atentan contra la vida y la integridad corporal","Diciembre",0
+2025,"Otros delitos que atentan contra la vida y la integridad corporal","Noviembre",70
+2025,"Otros delitos que atentan contra la vida y la integridad corporal","Diciembre",86
 2025,"Rapto","Enero",0
 2025,"Rapto","Febrero",0
 2025,"Rapto","Marzo",0
@@ -5181,7 +5181,7 @@
 2025,"Rapto","Agosto",0
 2025,"Rapto","Septiembre",0
 2025,"Rapto","Octubre",1
-2025,"Rapto","Noviembre",0
+2025,"Rapto","Noviembre",1
 2025,"Rapto","Diciembre",0
 2025,"Robo","Enero",947
 2025,"Robo","Febrero",893
@@ -5193,8 +5193,8 @@
 2025,"Robo","Agosto",1086
 2025,"Robo","Septiembre",1051
 2025,"Robo","Octubre",1160
-2025,"Robo","Noviembre",0
-2025,"Robo","Diciembre",0
+2025,"Robo","Noviembre",973
+2025,"Robo","Diciembre",930
 2025,"Secuestro","Enero",0
 2025,"Secuestro","Febrero",1
 2025,"Secuestro","Marzo",0
@@ -5206,7 +5206,7 @@
 2025,"Secuestro","Septiembre",2
 2025,"Secuestro","Octubre",1
 2025,"Secuestro","Noviembre",0
-2025,"Secuestro","Diciembre",0
+2025,"Secuestro","Diciembre",1
 2025,"Trata de personas","Enero",0
 2025,"Trata de personas","Febrero",0
 2025,"Trata de personas","Marzo",4
@@ -5218,7 +5218,7 @@
 2025,"Trata de personas","Septiembre",0
 2025,"Trata de personas","Octubre",0
 2025,"Trata de personas","Noviembre",0
-2025,"Trata de personas","Diciembre",0
+2025,"Trata de personas","Diciembre",1
 2025,"Tráfico de menores","Enero",0
 2025,"Tráfico de menores","Febrero",0
 2025,"Tráfico de menores","Marzo",0
@@ -5241,8 +5241,8 @@
 2025,"Violación equiparada","Agosto",32
 2025,"Violación equiparada","Septiembre",35
 2025,"Violación equiparada","Octubre",39
-2025,"Violación equiparada","Noviembre",0
-2025,"Violación equiparada","Diciembre",0
+2025,"Violación equiparada","Noviembre",30
+2025,"Violación equiparada","Diciembre",28
 2025,"Violación simple","Enero",24
 2025,"Violación simple","Febrero",25
 2025,"Violación simple","Marzo",40
@@ -5253,8 +5253,8 @@
 2025,"Violación simple","Agosto",39
 2025,"Violación simple","Septiembre",34
 2025,"Violación simple","Octubre",47
-2025,"Violación simple","Noviembre",0
-2025,"Violación simple","Diciembre",0
+2025,"Violación simple","Noviembre",34
+2025,"Violación simple","Diciembre",36
 2025,"Violencia de género en todas sus modalidades distinta a la violencia familiar","Enero",0
 2025,"Violencia de género en todas sus modalidades distinta a la violencia familiar","Febrero",1
 2025,"Violencia de género en todas sus modalidades distinta a la violencia familiar","Marzo",0
@@ -5277,5 +5277,5 @@
 2025,"Violencia familiar","Agosto",664
 2025,"Violencia familiar","Septiembre",720
 2025,"Violencia familiar","Octubre",736
-2025,"Violencia familiar","Noviembre",0
-2025,"Violencia familiar","Diciembre",0
+2025,"Violencia familiar","Noviembre",677
+2025,"Violencia familiar","Diciembre",526
