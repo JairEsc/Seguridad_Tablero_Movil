@@ -15,8 +15,6 @@
     crossorigin=""></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-search@2.3.7/dist/leaflet-search.src.css" />
     <script src="https://unpkg.com/leaflet-search@2.3.7/dist/leaflet-search.src.js"></script>
-
-
 </head>
 <body>
     <div id="contenedor_global" style="display: flex;">
@@ -30,7 +28,6 @@
                     <div style="background-color: rgba(0, 255, 255, 0);width: 21.5vw;display: flex;">
                         <p class="fuente_inegi" style="font-weight: bold;margin-left: 0.5vw;margin-right:0.5vw;font-size: small;">Fuente: </p>
                         <p class="fuente_inegi">Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública. Datos Abiertos de Incidencia Delictiva</p>
-
                     </div>
                 </ul>
             </div>
@@ -38,34 +35,29 @@
                 <script src="Datos/mexico.js"></script>
                 <script src="Scripts_extras/mapa_mex_seg.js"></script>
             </div>
-            
             <div id="map_tablero_seguridad_hidalgo" class="mapa_web_seguridad" style="float: right;display: none;">
                 <script src="Datos/geojson_hgo.js"></script>
                 <script src="Scripts_extras/mapa_hidalgo.js"></script>
             </div>
-            
         </div>
         <div id="segunda_mitad" style="height: 100vh; width: 50vw;display: block;">
             <div id="contenedor_historico" style="height: 30vh;width: 50vw;background-color: rgb(255, 255, 255);display: block">
                 <div id="contenedor_historico_titulo_select" style="width: 50vw;height: 2vh;display: flex;justify-content: center;">
-                    
                     <p class="Titulos_graphs">Gráfico Histórico para Tipo de Delito</p>
                     <select style="display: block;margin-left: 0.5vw;height: 2vh;min-width: 8vw;max-width: 16vw;overflow-y: auto;" id="tipo_dropdown"  >
                     </select>
-
                 </div>
                 <div id="contenedor_historico_canvas" style="height: 28vh;">
                     <canvas class="canva_de_chartjs"  id="lineplot_año_por_tipo_estatal"  style="margin-left: 0.5vw; margin-right: 0.5vw; width: 49vw;height: 40vh;display: block;"></canvas>
                     <canvas class="canva_de_chartjs"  id="lineplot_año_por_tipo_municipal"  style="margin-left: 0.5vw; margin-right: 0.5vw; width: 49vw;height: 40vh;display: none;"></canvas>
                 </div>
-                
             </div>
-
             <div id="contenedor_barplot_horizontal" style="height: 40vh;width: 50vw;;background-color: rgb(255, 255, 255)">
                 <div id="contenedor_barplot_horizontal_titulo_select" style="width: 50vw;height: 2vh;display: flex;justify-content: center">
                     <p class="Titulos_graphs">Gráfico: Tasa de incidencia para Año</p>
                     <select style="position: relative;height: 2vh;margin-left: 0.5vw;display: block;" id="año_dropdown">
-                        <option value="2025">2025 hasta Diciembre</option>
+                        <option value="2026">2026 (Enero)</option>
+                        <option value="2025">2025</option>
                         <option value="2024">2024</option>
                         <option value="2023">2023</option>
                         <option value="2022">2022</option>
@@ -105,6 +97,7 @@
         <script src="Scripts_extras/script_control_nav.js"></script>
         <script src="Scripts_extras/script_actualizar_charts.js"></script>
         <script src="Scripts_extras/script_revisar_dispositivo_movil.js"></script>
+        <script src="Scripts_extras/InsumosGraphs.js"></script>
 
     </div>
     

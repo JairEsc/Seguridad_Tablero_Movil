@@ -78,8 +78,8 @@ generate_values_tasa_media = function (delito_sel) {//datos para gráfica de mes
   //console.log("ESTATAL: datos para gráfica de meses dada elecciones de año y delito")
   //console.log(data_meses_estatal_fetched_and_splitted.slice(40*12*year_sel_modulo2015+1,40*12*(year_sel_modulo2015+1)+1).slice(12*delito_sel,12*(delito_sel+1)))
   arr_tasa=[]
-  for(let www=0;www<10;www++){
-    arr_tasa.push(data_tasa_media_fetched_and_splitted[delito_sel+1+www*40])
+  for(let www=0;www<11;www++){//Hasta 2025
+    arr_tasa.push(data_tasa_media_fetched_and_splitted[delito_sel+1+www*39])
   }
   return(arr_tasa)
 }
@@ -94,8 +94,8 @@ generate_values_Año = function (year_sel) {
   //console.log("ESTATAL: datos para gráfica de tipos de delito dado año")
 
   //Codigo para generar valores al seleccionar el año en la pestaña: 'barplot_entidad'
-  const inicio = 40 * (year_sel - 2015) + 1;
-  const fin = inicio + 40;
+  const inicio = 39 * (year_sel - 2015) + 1;
+  const fin = inicio + 39;
   //console.log(data_fetched_and_splitted.slice(inicio, fin))
   if (!data_fetched_and_splitted) {
     return [];
@@ -119,22 +119,21 @@ generate_values_Año = function (year_sel) {
 const kkk = 100000;
 generate_values_Tipo = function (tipo_sel) {//notar que no es consistente con la tasa nacional. Este incluye header. 
   //Codigo para generar valores al seleccionar el año en la pestaña: 'historico_entidad'
-  //console.log("ESTATAL: datos para gráfica histórica dado tipo de delito")
   arr = [];
   años=[]
-  for (k = 0; k < 10; k++) {//En Enero de 2026 va a cambiar.Por ahora solo se consumen de 2015 a 2024
+  for (k = 0; k < 11; k++) {//En Enero de 2026 va a cambiar.Por ahora solo se consumen de 2015 a 2024
     arr.push(
       Math.round(
         kkk *
           parseFloat(
-            data_fetched_and_splitted[k * 40 + tipo_sel]
+            data_fetched_and_splitted[k * 39 + tipo_sel]
               .split(",")[4]
               .replace(/[\r\n"']/g, "")
               .trim()
           )
       ) / kkk
     );
-    años.push(data_fetched_and_splitted[k * 40 + tipo_sel].split(",")[0])
+    años.push(data_fetched_and_splitted[k * 39 + tipo_sel].split(",")[0])
   }
   //console.log(arr);
   //console.log(años);
@@ -316,7 +315,7 @@ Promise.all([csvCargado,csvTasaMedia]).then(() => {
 //console.log("Graficas por default estatal. Creada")
 //una más: 
 //Tasa media para las 32 entidades. 
-chart.data.datasets[1].data=generate_values_tasa_media(0).map((x)=>{return(Math.round(parseFloat(x.split(",")[2])*100000)/100000)})
+chart.data.datasets[1].data=generate_values_tasa_media(16).map((x)=>{return(Math.round(parseFloat(x.split(",")[2])*100000)/100000)})
 chart.update();
 });
 

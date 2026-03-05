@@ -38,63 +38,114 @@ intercensal_mun_2020=intercensal_mun_2020|>
   dplyr::filter(!is.na(Municipio)& Municipio!='Estatal')
 
 ##Le pegamos la poblacion a cada bloque de 5 años. 
-datos_estatal_2025=read.csv("Municipal-Delitos-2015-2025_dic2025/Municipal-Delitos-2015-2025_dic2025.csv",check.names = F,fileEncoding = "latin1")
+datos_estatal_2025=read.csv("../Municipal-Delitos-2015-2025_ene2026.csv",check.names = F,fileEncoding = "latin1") |> 
+  rbind(read.csv("../RNID-Delitos_Municipal-2026-ene2026.csv",check.names = F,fileEncoding = "latin1"))
+hidalgo_municipal_2025=datos_estatal_2025|>
+  dplyr::filter(Clave_Ent==13) |> 
+  dplyr::filter(`Cve. Municipio`<13100)
+datos_estatal_2025 |> colnames()
+datos_estatal_2025=datos_estatal_2025 |> 
+  dplyr::mutate(dplyr::across(Enero:Diciembre,as.numeric))
 datos_estatal_2025$total=rowSums(datos_estatal_2025|>dplyr::select(Enero:Diciembre),na.rm = T)
+datos_estatal_2025$`Tipo de delito`[datos_estatal_2025$`Tipo de delito`%in%c(
+  "Violación equiparada","Violación simple" 
+)] ="Violación" 
 datos_estatal_2025=datos_estatal_2025|>
   dplyr::select(Año,Entidad,`Tipo de delito`,Enero:total)|>
   dplyr::group_by(Año,Entidad,`Tipo de delito`)|>
   dplyr::summarise_all(sum)
-datos_estatal_2025$pobtot=rep(NA,nrow(datos_estatal_2025))
-datos_estatal_2025$pobtot[datos_estatal_2025$Año%in%c(2015:2019)]=
-intercensal_nac_2015_2$`Población total`|>lapply(FUN = \(x) rep(x,40))|>unlist()|>rep(5)
+##Lo hacemos con joins mejor
+
+
 #el de 2020:2025 tambien
-datos_estatal_2025$pobtot[datos_estatal_2025$Año%in%c(2020:2025)]=
-  nacional2020$`2020...9`|>lapply(FUN = \(x) rep(x,40))|>unlist()|>rep(6)
+nacional2020 =nacional2020 |> dplyr::rename(`Población total`=`2020...9`)
+poblacion_por_años=c(2015:2026) |> lapply(
+  \(z){
+    if(z>=2020){
+      w=nacional2020
+    }
+    else{
+      w=intercensal_nac_2015_2
+    }
+    w$Año=z
+    return(w)
+  }
+)
+
+poblacion_por_años=do.call(rbind,poblacion_por_años)
+datos_estatal_2025$Entidad |> unique() |> lapply(\(w){w%in%poblacion_por_años$`Entidad federativa`}) |> unlist() |> all()
+
+
+datos_estatal_2025=datos_estatal_2025|> 
+  merge(poblacion_por_años |> dplyr::mutate(`Población total`=as.numeric(`Población total`)),by.x=c('Entidad','Año'),by.y=c('Entidad federativa',"Año") )
+
 ##Corregimos la tasa
 datos_estatal_2025=datos_estatal_2025|>
-  dplyr::mutate(tasa=1000*total/as.numeric(pobtot))
+  dplyr::mutate(tasa=1000*total/as.numeric(`Población total`))
 
 
 
 ######################Lo mismo pero para la municipal
-datos_municipal_2025=read.csv("Municipal-Delitos-2015-2025_dic2025/Municipal-Delitos-2015-2025_dic2025.csv",check.names = T,fileEncoding = "latin1")
-hidalgo_municipal_2025=datos_municipal_2025|>
-  dplyr::filter(Clave_Ent==13)
+##hidalgo_municipal_2025 ya lo definimos arriba
 
 
 hidalgo_municipal_2025$total=rowSums(hidalgo_municipal_2025|>dplyr::select(Enero:Diciembre),na.rm = T)
 
 hidalgo_municipal_2025=hidalgo_municipal_2025|>
-  dplyr::select(Año,Municipio,Tipo.de.delito,Enero:Diciembre,total)
+  dplyr::select(Año,Municipio,`Tipo de delito`,Enero:Diciembre,total)
 
 ##Le pegamos del 2015 a 2019 la poblacion
 hidalgo_municipal_2025$pobtot=rep(0,nrow(hidalgo_municipal_2025))
 hidalgo_municipal_2025=hidalgo_municipal_2025|>
-  dplyr::arrange(Año,Municipio,Tipo.de.delito)
+  dplyr::arrange(Año,Municipio,`Tipo de delito`)
+hidalgo_municipal_2025$`Tipo de delito`[hidalgo_municipal_2025$`Tipo de delito`%in%c(
+  "Violación equiparada","Violación simple" 
+)] ="Violación" 
 hidalgo_municipal_2025_2=hidalgo_municipal_2025|>
-  dplyr::group_by(Año,Municipio,Tipo.de.delito)|>
+  dplyr::group_by(Año,Municipio,`Tipo de delito`)|>
   dplyr::summarise_all(sum)
-##Rellenamos 2015
-hidalgo_municipal_2025_2$pobtot[hidalgo_municipal_2025_2$Año%in%c(2015:2019)]=
-  intercensal_mun_2015_2$`Población total`|>lapply(FUN = \(x) rep(x,40))|>unlist()|>rep(5)
-##Rellenamos 2020
-hidalgo_municipal_2025_2$pobtot[hidalgo_municipal_2025_2$Año%in%c(2020:2025)]=
-  intercensal_mun_2020$`Población total`|>lapply(FUN = \(x) rep(x,40))|>unlist()|>rep(6)
+##Rellenamos poblaciones
+
+poblacion_por_años_municipal=c(2015:2026) |> lapply(
+  \(z){
+    if(z>=2020){
+      w=intercensal_mun_2020|> dplyr::mutate(Municipio=stringr::str_squish (gsub('\\*','',Municipio)))
+    }
+    else{
+      w=intercensal_mun_2015_2 |> dplyr::mutate(Municipio=stringr::str_squish (gsub('\\*','',Municipio)))
+    }
+    w$Año=z
+    return(w)
+  }
+)
+poblacion_por_años_municipal=do.call(rbind,poblacion_por_años_municipal)
+hidalgo_municipal_2025$Municipio |> unique() |> lapply(\(w){w%in%poblacion_por_años_municipal$Municipio}) |> unlist() |> all()
+
+hidalgo_municipal_2025=hidalgo_municipal_2025 |> 
+  merge(poblacion_por_años_municipal |> dplyr::mutate(`Población total`=as.numeric(`Población total`)),by.x=c('Municipio','Año'),by.y=c('Municipio',"Año") )
 
 #Calculamos tasa 
-hidalgo_municipal_2025_2=hidalgo_municipal_2025_2|>
-  dplyr::mutate(pobtot=as.numeric(pobtot))|>
-  dplyr::mutate(tasa=1000*total/pobtot)
+hidalgo_municipal_2025_2=hidalgo_municipal_2025|>
+  dplyr::mutate(tasa=1000*total/`Población total`)
 
 
 ##Ahora sí generamos los CSV consumibles por js.
 
+datos_estatal_2025$`Tipo de delito` |> unique()
+
 datos_estatal_2025|>
   dplyr::ungroup()|>
   dplyr::filter(Entidad=='Hidalgo')|>
-  dplyr::select(Año,`Tipo de delito`,total,pobtot,tasa)|>
+  dplyr::select(Año,`Tipo de delito`,total,`Población total`,tasa)|>
   write.csv("../Datos/CSVs_2/Hidalgo_Año_y_Tipo.csv",row.names = F,fileEncoding = "UTF-8")
 
+incidencia_mensual=datos_estatal_2025|>
+  dplyr::ungroup()|>
+  dplyr::filter(Entidad=='Hidalgo')|>
+  dplyr::select(-Entidad)|>
+  tidyr::pivot_longer(cols = c(Enero:Diciembre),names_to = "Mes",values_to = "Conteo")|>
+  dplyr::select(Año, `Tipo de delito`,Mes,Conteo)|>
+  dplyr::mutate(Conteo=ifelse(is.na(Conteo),0,Conteo))
 
 datos_estatal_2025|>
   dplyr::ungroup()|>
@@ -105,26 +156,50 @@ datos_estatal_2025|>
   dplyr::mutate(Conteo=ifelse(is.na(Conteo),0,Conteo))|>
   write.csv("../Datos/CSVs_2/delitos por mes_15-24_estatal.csv",row.names = F,fileEncoding = "UTF-8")
 
-
-datos_estatal_2025|>
+tasa_hgo=datos_estatal_2025|>
   dplyr::ungroup()|>
-  dplyr::select(Año,`Tipo de delito`,tasa)|>
+  dplyr::select(Entidad,Año,`Tipo de delito`,tasa,total)|>
+  dplyr::filter(Entidad=='Hidalgo') |> 
   dplyr::group_by(Año,`Tipo de delito`)|>
-  dplyr::summarise(tasa_media=mean(tasa),tasa_mediana=median(tasa))|>
-  write.csv("../Datos/CSVs_2/tasa_media_nacional.csv",fileEncoding = "UTF-8",row.names = F)
+  dplyr::summarise(tasa_media_hgo=mean(tasa),total_hgo=sum(total))
+tasa_nac=datos_estatal_2025|>
+  dplyr::ungroup()|>
+  dplyr::select(Entidad,Año,`Tipo de delito`,tasa,total)|>
+  dplyr::group_by(Año,`Tipo de delito`)|>
+  dplyr::summarise(tasa_media_nac=mean(tasa),total_nac=sum(total))
+tasa_nac=tasa_nac |> 
+  merge(tasa_hgo,by=c('Año','Tipo de delito'))
+tasa_nac=tasa_nac |> 
+  dplyr::mutate(prop_totales=round(100*total_hgo/total_nac,2))
+tasa_nac |> write.csv("../Datos/CSVs_2/tasa_media_nacional.csv",fileEncoding = "UTF-8",row.names = F)
 
 
 hidalgo_municipal_2025_2|>
   tidyr::pivot_longer(cols = Enero:Diciembre,names_to = "Mes",values_to = "Conteo")|>
-  dplyr::select(Año,Municipio,Tipo.de.delito,Mes,Conteo)|>
+  dplyr::select(Año,Municipio,`Tipo de delito`,Mes,Conteo)|>
   dplyr::mutate(Conteo=ifelse(is.na(Conteo),0,Conteo))|>
   write.csv("../Datos/CSVs_2/delitos por mes_15-24.csv",fileEncoding = "UTF-8",row.names = F)
 
 
 hidalgo_municipal_2025_2|>
-  dplyr::select(Año,Municipio,Tipo.de.delito,total,tasa)|>
+  dplyr::select(Año,Municipio,`Tipo de delito`,total,tasa)|>
   write.csv("../Datos/CSVs_2/Municipal_Año_y_Tipo.csv",fileEncoding = "UTF-8",row.names = F)
 
+delitos_2015_2025=(datos_estatal_2025 |> 
+  dplyr::filter(Año!=2026))$`Tipo de delito` |> unique()
+delitos_2026=(datos_estatal_2025 |> 
+  dplyr::filter(Año==2026))$`Tipo de delito` |> unique()
+delitos_sin_cambios=delitos_2015_2025[(delitos_2015_2025 |> lapply(\(z){z%in% delitos_2026}) |> unlist())]
+delitos_con_cambios=delitos_2015_2025[!(delitos_2015_2025 |> lapply(\(z){z%in% delitos_2026}) |> unlist())]
+#"Violación equiparada" "Violación simple"   ahora son Violación 
+##O sea que podemos reclasificar todos los delitos antiguos en los nuevos. 
 
+##Los nuevos son: 
+delitos_nuveos=delitos_2026[!(delitos_2026 |> lapply(\(z){z%in% delitos_2015_2025}) |> unlist())]
+delitos_nuveos[delitos_nuveos!='Violación']
+
+##O sea que tengo 39+8 delitos
+#40 con seguimiento de 2015 - 2026 y
+#8 con seguimiento de 2026->
 
 #IDM=read.csv("Peticiones especiales/IDM_NM_ene25.csv",check.names = F,fileEncoding = "latin1")

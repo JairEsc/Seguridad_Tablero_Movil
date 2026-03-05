@@ -1,4 +1,4 @@
-toString
+
 //---------------------------------------------------
 $("#año_dropdown").change(function () {
   //Cambia el valor del año. //O sea que solo actualizamos las gráficas superiores
@@ -6,7 +6,7 @@ $("#año_dropdown").change(function () {
   //actualizamos el objeto data que guarda los valores para el barplot de año
   //destruimos la gráica anterior
   //Creamos una con los datos actualizados
-  console.log("Año actualizado a " + this.value);
+  //console.log("Año actualizado a " + this.value);
   let los40Actuales = generate_values_Año(parseInt(this.value)); //generamos los valores para la estatal de año
   //actualizamos "data"
   los40Actuales_ordenados_estatal=ordenarPorValores(tipos_de_delito,los40Actuales.map((x)=> {return(x<0.0001?0:x)}))
@@ -147,7 +147,7 @@ $("#tipo_dropdown").change(function () {
   chart = new Chart(ctx_hist, {
     type: "line",
     data: {
-      labels: Array.from({ length: 10 }, (_, i) => 2015 + i),
+      labels: Array.from({ length: 11 }, (_, i) => 2015 + i),
       datasets: [
         {
           data: historico_actual,
