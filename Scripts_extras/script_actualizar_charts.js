@@ -1,5 +1,25 @@
-
-//---------------------------------------------------
+///
+//Ahora le toca refactor al que renombraremos "ActualizadorGraficasEstatal/Municipal.js"
+//Una función para cada gráfica. Una para estatal y otra para municipal.
+ActualizarGraficaHistoricoEstatal=function(tipo_de_delito){
+  //
+}
+ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
+  //
+}
+ActualizarGraficaIncidenciaAnualEstatal=function(tipo_de_delito){
+  //
+}
+ActualizarGraficaIncidenciaAnualMunicipal=function(tipo_de_delito){
+  //
+}
+ActualizarGraficaIncidenciaMensualEstatal=function(tipo_de_delito){
+  //
+}
+ActualizarGraficaIncidenciaMensualMunicipal=function(tipo_de_delito){
+  //
+}
+  //---------------------------------------------------
 $("#año_dropdown").change(function () {
   //Cambia el valor del año. //O sea que solo actualizamos las gráficas superiores
   //generamos los nuevos valores para barplot de año
@@ -8,8 +28,10 @@ $("#año_dropdown").change(function () {
   //Creamos una con los datos actualizados
   //console.log("Año actualizado a " + this.value);
   let los40Actuales = generate_values_Año(parseInt(this.value)); //generamos los valores para la estatal de año
+  console.log(los40Actuales)
   //actualizamos "data"
-  los40Actuales_ordenados_estatal=ordenarPorValores(tipos_de_delito,los40Actuales.map((x)=> {return(x<0.0001?0:x)}))
+  los40Actuales_ordenados_estatal=ordenarPorValores(los40Actuales.map((x)=> {return(x[0])}),los40Actuales.map((x)=> {return(x[1])}))
+  //primeros40_ordenados_estatal=ordenarPorValores(primeros40.map((x)=> {return(x[0])}),primeros40.map((x)=> {return(x[1])}))//filtrar valores muy pequeños?
 
   data.datasets[0].data = los40Actuales_ordenados_estatal.valoresOrdenados; //Por ahora todo lo demás se queda igual que en el default
   data.labels = los40Actuales_ordenados_estatal.tiposOrdenados.map((x)=>{if(sub_labels_clasificacion[x]){return(x+'...')}else{return(x)}}); //Por ahora todo lo demás se queda igual que en el default
@@ -136,9 +158,8 @@ $("#tipo_dropdown").change(function () {
   //actualizamos el objeto data que guarda los valores para el lineplot de tipo
   //destruimos la gráica anterior
   //Creamos una con los datos actualizados
-  let historico_actual = generate_values_Tipo(
-    tipos_de_delito.indexOf(this.value) + 1
-  ); //generamos los valores para la estatal de tipo
+  let historico_actual =generate_values_tasa_media(tipos_de_delito.indexOf(this.value))
+  console.log(historico_actual)
   //actualizamos "data"
   chart.destroy();
   const ctx_hist = document
@@ -342,13 +363,13 @@ let meses_actual_est = generate_values_meses_estatal(
 );
 stackedBar.destroy();
 document.getElementById('barplot_meses').style.backgroundImage='none'
-data_meses.datasets[0].data = meses_actual_est.map((x)=>{return parseFloat((x.split(","))[3].replace(/[\r\n"']/g, "").trim())});
+data_meses.datasets[0].data = meses_actual_est.map((x)=>{return parseFloat(x[1])});
 data_meses.datasets[0].label = 'Delitos en Hidalgo ('+valor_tipo+' '+valor_año+')'
 //console.log("Nuevos datos de meses: ")
 //console.log(data_meses.datasets[0].data)
 if(data_meses.datasets[0].data.reduce((partialSum, a) => partialSum + a, 0)==0){
   //console.log("era cero")
-  document.getElementById('barplot_meses').style.backgroundImage='url(Datos/no_data.png)';
+  //document.getElementById('barplot_meses').style.backgroundImage='url(Datos/no_data.png)';
 }
 
 const ctx_meses = document
@@ -387,7 +408,7 @@ document.getElementById('barplot_meses_mun').style.backgroundImage='none'
 data_meses_mun.datasets[0].label = 'Total de Delitos ('+valor_tipo+' '+valor_año+')'
 if(data_meses_mun.datasets[0].data.reduce((partialSum, a) => partialSum + a, 0)==0){
   //console.log("era cero")
-  document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
+  //document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
 }
 const ctx_meses_mun = document
   .getElementById("barplot_meses_mun")
