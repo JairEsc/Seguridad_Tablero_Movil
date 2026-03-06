@@ -119,13 +119,13 @@ poblacion_por_años_municipal=c(2015:2026) |> lapply(
   }
 )
 poblacion_por_años_municipal=do.call(rbind,poblacion_por_años_municipal)
-hidalgo_municipal_2025$Municipio |> unique() |> lapply(\(w){w%in%poblacion_por_años_municipal$Municipio}) |> unlist() |> all()
+hidalgo_municipal_2025_2$Municipio |> unique() |> lapply(\(w){w%in%poblacion_por_años_municipal$Municipio}) |> unlist() |> all()
 
-hidalgo_municipal_2025=hidalgo_municipal_2025 |> 
+hidalgo_municipal_2025_2=hidalgo_municipal_2025_2 |> 
   merge(poblacion_por_años_municipal |> dplyr::mutate(`Población total`=as.numeric(`Población total`)),by.x=c('Municipio','Año'),by.y=c('Municipio',"Año") )
 
 #Calculamos tasa 
-hidalgo_municipal_2025_2=hidalgo_municipal_2025|>
+hidalgo_municipal_2025_2=hidalgo_municipal_2025_2|>
   dplyr::mutate(tasa=1000*total/`Población total`)
 
 
@@ -175,14 +175,24 @@ tasa_nac |> write.csv("../Datos/CSVs_2/tasa_media_nacional.csv",fileEncoding = "
 
 
 hidalgo_municipal_2025_2|>
-  tidyr::pivot_longer(cols = Enero:Diciembre,names_to = "Mes",values_to = "Conteo")|>
-  dplyr::select(Año,Municipio,`Tipo de delito`,Mes,Conteo)|>
-  dplyr::mutate(Conteo=ifelse(is.na(Conteo),0,Conteo))|>
+  dplyr::select(Municipio:total) |> 
+  #tidyr::pivot_longer(cols = Enero:Diciembre,names_to = "Mes",values_to = "Conteo")|>
+  #dplyr::select(Año,Municipio,`Tipo de delito`,Mes,Conteo)|>
+  #dplyr::mutate(Conteo=ifelse(is.na(Conteo),0,Conteo))|>
   write.csv("../Datos/CSVs_2/delitos por mes_15-24.csv",fileEncoding = "UTF-8",row.names = F)
 
-
-hidalgo_municipal_2025_2|>
+##Modificamos el de tasas para el histórico municipal y agregar el promedio municipal y el promedio estatal
+tasa_hgo=hidalgo_municipal_2025_2|>
+  dplyr::select(Año,Municipio,`Tipo de delito`,total,tasa) |> 
+  dplyr::group_by(Año,`Tipo de delito`) |> 
+  dplyr::summarise(tasa_hgo=mean(tasa),
+                   total_hgo=sum(total))
+tasa_mpio=hidalgo_municipal_2025_2|>
   dplyr::select(Año,Municipio,`Tipo de delito`,total,tasa)|>
+  dplyr::rename(tasa_mpio=tasa)
+tasa_mpio=tasa_mpio |> 
+  merge(tasa_hgo,by=c("Año","Tipo de delito"))
+tasa_mpio |> 
   write.csv("../Datos/CSVs_2/Municipal_Año_y_Tipo.csv",fileEncoding = "UTF-8",row.names = F)
 
 delitos_2015_2025=(datos_estatal_2025 |> 

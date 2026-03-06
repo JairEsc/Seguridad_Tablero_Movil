@@ -96,6 +96,9 @@ function inicializarDataGraficaMensual(data_estatal_año_tipo){
       }]
     })
 }
+
+
+
 ordenarPorValores=function(tipos_de_delito, valores) {
   let ordenado = valores.map((v, i) => ({ valor: v, delito: tipos_de_delito[i] }))
                         .sort((a, b) =>  b.valor-a.valor );
