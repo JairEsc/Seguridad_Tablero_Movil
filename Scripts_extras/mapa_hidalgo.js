@@ -1,4 +1,4 @@
-let municipio_actual = 45;
+let municipio_actual = 'Pachuca de Soto';
 
 var map_h = L.map('map_tablero_seguridad_hidalgo',{
     maxBoundsViscosity: 0.8
@@ -69,7 +69,7 @@ function getColor_h(d) {
 }//color basado en gradiente
 
 layer_seleccionado_color_borde=function(feature){
-    if(feature.properties.NOM_MUN==municipios[municipio_actual]){
+    if(feature.properties.NOM_MUN==municipio_actual){
         return('#666')
     }
     else{
@@ -80,10 +80,10 @@ function style_ent_h(feature) {
     return {
         fillColor: getColor_h(parseFloat(feature.properties.Area)),//cambia a area
         opacity: 1,
-        color: feature.properties.NOM_MUN==municipios[municipio_actual]?"#667":'white',
-        dashArray: feature.properties.NOM_MUN==municipios[municipio_actual]?'0':'5',
-        fillOpacity: feature.properties.NOM_MUN==municipios[municipio_actual]?0.4:0.4,
-        pane: feature.properties.NOM_MUN == municipios[municipio_actual] ? 'municipioActual' : 'municipios'
+        color: feature.properties.NOM_MUN==municipio_actual?"#667":'white',
+        dashArray: feature.properties.NOM_MUN==municipio_actual?'0':'5',
+        fillOpacity: feature.properties.NOM_MUN==municipio_actual?0.4:0.4,
+        pane: feature.properties.NOM_MUN == municipio_actual ? 'municipioActual' : 'municipios'
     };
 }
 poligonos_map_h = L.geoJson(hidalgo, {
@@ -108,7 +108,7 @@ function click_on_feature(e) {
     var layer = e.target;
     //console.log(e.target.feature.properties.NOM_MUN)
     layer.bringToFront();
-    municipio_actual=municipios.indexOf(e.target.feature.properties.NOM_MUN)
+    municipio_actual=e.target.feature.properties.NOM_MUN;
     //Forzar el cambio en cada grafica
     var canvas_año_municipal = document.getElementById('año_dropdown');
     var canvas_tipo_municipal = document.getElementById('tipo_dropdown');
@@ -126,7 +126,7 @@ function resetHighlight_h(e) {
     poligonos_map_h.resetStyle();
 }
 function onEachFeature_h(feature, layer) {
-    if (feature.properties.NOM_MUN == municipios[municipio_actual]) {
+    if (feature.properties.NOM_MUN == municipio_actual) {
         layer.bringToFront();
     }
     layer.bindTooltip('Municipio: '+feature.properties.NOM_MUN+'<br>'+

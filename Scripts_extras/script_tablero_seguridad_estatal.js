@@ -50,7 +50,7 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
   alimentarDropdownTiposDelito(tipos_de_delito)//Afecta a document.getElementById("tipo_dropdown")
   
   ///
-  let primeros40 = generarInsumosIncidenciaAnual(2025);
+  let primeros40 = generarInsumosIncidenciaAnual(2026);
   primeros40_ordenados_estatal=ordenarPorValores(primeros40.map((x)=> {return(x[0])}),primeros40.map((x)=> {return(x[1])}))//filtrar valores muy pequeños?
   //
   dataGraficaTiposPorAño = inicializarDataGraficaTiposPorAño(primeros40_ordenados_estatal)
@@ -155,7 +155,7 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
 
 Promise.all([cargandoDataAñoTipo,cargadoDataMesesEstatal]).then(()=>{
 
-    data_estatal_año_tipo=generarInsumosIncidenciaMensual(2025,tipos_de_delito[0])
+    data_estatal_año_tipo=generarInsumosIncidenciaMensual(2026,tipos_de_delito[0])
     dataGraficaMensual = inicializarDataGraficaMensual(data_estatal_año_tipo)
     const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
 
@@ -168,7 +168,7 @@ Promise.all([cargandoDataAñoTipo,cargadoDataMesesEstatal]).then(()=>{
       data: {
       labels: meses,
       datasets: [{
-        label: 'Delitos en Hidalgo (Aborto 2025)',
+        label: 'Delitos en Hidalgo (Aborto 2026)',
         data: data_estatal_año_tipo.map((x)=>{return parseFloat(x[1])}),
         fill: false,
             backgroundColor: [
