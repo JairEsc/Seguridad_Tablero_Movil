@@ -1,27 +1,9 @@
 //Renombramos a "InicializacionTableroEstatal.js".
 
-/* Variar el width del selector según la seleccion. */
-const select = document.getElementById("tipo_dropdown");
 
-select.addEventListener("change", function () {
-  const dummySelect = document.createElement("select");
-  dummySelect.classList.add("dummy");
-  const dummyOption = document.createElement("option");
-  dummyOption.innerHTML = this.value;
-  dummySelect.appendChild(dummyOption);
-  document.body.appendChild(dummySelect);
-  select.style.width = `${dummySelect.offsetWidth}px`;
-  document.body.removeChild(dummySelect);
-});
-select.dispatchEvent(new Event("change"));
-/* ------------------------------ */
 
 //Todavía falta hacer dependiente de la selección las gráficas. Ahí, se deberá agregar la actualización de CVE_MUN de hidalgo para actualizar los colores.
 
-let data_año_tipo_estatal; // Variable global para almacenar los datos procesados
-let data_meses_estatal; // Variable global para almacenar los datos procesados
-let data_tasa_media; // Variable global para almacenar los datos procesados
-let tipos_de_delito;
   
 const plugin_actualizar_eleccion_cruzada=[{
   id: 'customEventListener',
@@ -43,113 +25,9 @@ const plugin_actualizar_eleccion_cruzada=[{
       }
   }
 }]
-let csvTasaMedia = new Promise((resolve, reject) => {
-  fetch("Datos/CSVs_2/tasa_media_nacional.csv")
-    .then((response) => response.text())
-    .then((data) => {
-      data_tasa_media = data.split("\n");
-      resolve(); // La promesa se resuelve cuando los datos están listos
-    });
-});
-let csvCargado = new Promise((resolve, reject) => {
-  fetch("Datos/CSVs_2/Hidalgo_Año_y_Tipo.csv")
-    .then((response) => response.text())
-    .then((data) => {
-      data_año_tipo_estatal = data.split("\n");
-      tipos_de_delito = data_año_tipo_estatal
-        .slice(-48,-1)
-        .map((x)=>x.replace(/"/g,'').split(",")[1]);
-      resolve(); // La promesa se resuelve cuando los datos están listos
-    });
-});
-let mesesEstatalCsvCargado = new Promise((resolve, reject) => {
-  fetch("Datos/CSVs_2/delitos por mes_15-24_estatal.csv")
-    .then((response) => response.text())
-    .then((data) => {
-      data_meses_estatal = data.split("\n");
-      resolve(); // La promesa se resuelve cuando los datos están listos
-    });
-});
-ordenarPorValores=function(tipos_de_delito, valores) {
-  let ordenado = valores.map((v, i) => ({ valor: v, delito: tipos_de_delito[i] }))
-                        .sort((a, b) =>  b.valor-a.valor );
 
-  return {
-      valoresOrdenados: ordenado.map(obj => obj.valor),
-      tiposOrdenados: ordenado.map(obj => obj.delito)
-  };
-}
 
-generate_values_tasa_media = function (delito_sel) {//datos para gráfica de meses dada elecciones de año y delito
-  //console.log("ESTATAL: datos para gráfica de meses dada elecciones de año y delito")
-  //console.log(data_meses_estatal_fetched_and_splitted.slice(40*12*year_sel_modulo2015+1,40*12*(year_sel_modulo2015+1)+1).slice(12*delito_sel,12*(delito_sel+1)))
-  arr_tasa=[]
-  for(let www=0;www<11;www++){//Hasta 2025
-    arr_tasa.push(data_tasa_media[delito_sel+1+www*39])
-  }
-  console.log(arr_tasa)
-  return(generarInsumosHistorico(tipos_de_delito[delito_sel]))
-  return(arr_tasa)
-}
-generate_values_meses_estatal = function (year_sel,delito_sel) {//datos para gráfica de meses dada elecciones de año y delito
-  //year_sel_modulo2015=(year_sel-2015)
-  //console.log("ESTATAL: datos para gráfica de meses dada elecciones de año y delito")
-  //console.log(data_meses_estatal_fetched_and_splitted.slice(40*12*year_sel_modulo2015+1,40*12*(year_sel_modulo2015+1)+1).slice(12*delito_sel,12*(delito_sel+1)))
-  
-  return(generarInsumosIncidenciaMensual(year_sel,tipos_de_delito[delito_sel]))
-  return(data_meses_estatal.slice(40*12*year_sel_modulo2015+1,40*12*(year_sel_modulo2015+1)+1)
-.slice(12*delito_sel,12*(delito_sel+1)))
-}
-generate_values_Año = function (year_sel) {
-  //console.log("ESTATAL: datos para gráfica de tipos de delito dado año")
 
-  //Codigo para generar valores al seleccionar el año en la pestaña: 'barplot_entidad'
-  const inicio = 39 * (year_sel - 2015) + 1;
-  const fin = inicio + 39;
-  //console.log(data_fetched_and_splitted.slice(inicio, fin))
-  if (!data_año_tipo_estatal) {
-    return [];
-  }
-  return(generarInsumosIncidenciaAnual(year_sel))
-  return data_año_tipo_estatal.slice(inicio, fin).map((x) =>
-    (
-      Math.round(
-        100000 *
-          parseFloat(
-            x
-              .split(",")[4]
-              .replace(/[\r\n"']/g, "")
-              .trim()
-          )
-      ) / 100000
-    )
-      .toString()
-      .replace(",", ".")
-  ); // Extraer columna 4
-};
-const kkk = 100000;
-generate_values_Tipo = function (tipo_sel) {//notar que no es consistente con la tasa nacional. Este incluye header. 
-  //Codigo para generar valores al seleccionar el año en la pestaña: 'historico_entidad'
-  arr = [];
-  años=[]
-  for (k = 0; k < 11; k++) {//En Enero de 2026 va a cambiar.Por ahora solo se consumen de 2015 a 2024
-    arr.push(
-      Math.round(
-        kkk *
-          parseFloat(
-            data_año_tipo_estatal[k * 39 + tipo_sel]
-              .split(",")[4]
-              .replace(/[\r\n"']/g, "")
-              .trim()
-          )
-      ) / kkk
-    );
-    años.push(data_año_tipo_estatal[k * 39 + tipo_sel].split(",")[0])
-  }
-  //console.log(arr);
-  //console.log(años);
-  return arr;
-};
 let data;
 let data_meses;
 //Vamos a hacer un primera  llamada a los datos para alimentar a las gráficas por default.
@@ -165,72 +43,25 @@ const inverted_sub_labels = Object.fromEntries(
   Object.entries(sub_labels_clasificacion).map(([key, value]) => [value, key])
 );
 
-Promise.all([csvCargado,csvTasaMedia]).then(() => {
+Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
   //Aquí alimentamos las gráficas por default. Y de paso nos aseguramos que los csv ya se leyeron.
   //Esto nada más ocurre la primera vez----
   //definimos un objeto para las sub-labels
+  alimentarDropdownTiposDelito(tipos_de_delito)//Afecta a document.getElementById("tipo_dropdown")
   
-  //------
-
-
-  var optns = document.getElementById("tipo_dropdown");
-
-  for (element in tipos_de_delito) {
-    var opt = document.createElement("option");
-    opt.value = tipos_de_delito[element];
-    opt.innerHTML = tipos_de_delito[element];
-    if(sub_labels_clasificacion[tipos_de_delito[element]]){
-      opt.title=sub_labels_clasificacion[tipos_de_delito[element]]
-      opt.innerHTML+='...'
-      opt.style.backgroundColor='rgb(230, 230, 230)'
-    }
-    optns.appendChild(opt);
-  }
-
   ///
-  let primeros40 = generate_values_Año(2025);
-  //console.log("Primeros 40 valores:", primeros40);
-
+  let primeros40 = generarInsumosIncidenciaAnual(2025);
   primeros40_ordenados_estatal=ordenarPorValores(primeros40.map((x)=> {return(x[0])}),primeros40.map((x)=> {return(x[1])}))//filtrar valores muy pequeños?
-
   //
-  data = {
-    labels: primeros40_ordenados_estatal.tiposOrdenados.map((x)=>{if(sub_labels_clasificacion[x]){return(x+'...')}else{return(x)}}),//tipos_de_delito
-    datasets: [
-      {
-        axis: "y",
-        label: "Tasa de delito por cada mil habitantes",
-        data: primeros40_ordenados_estatal.valoresOrdenados,//primeros40
-        fill: false,
-        backgroundColor: [
-          "rgba(98,17,50,0.1)",
-          "rgba(157,36,73,0.1)",
-          "rgba(112,144,144,0.1)",
-          "rgba(212,193,156,0.1)",
-          "rgba(179,142,93,0.1)",
-          "rgba(29,29,27,0.1)",
-          "rgba(9, 86, 70,0.1)",
-        ],
-        borderColor: [
-          "rgb(98,17,50)",
-          "rgb(157,36,73)",
-          "rgb(112,144,144)",
-          "rgb(212,193,156)",
-          "rgb(179,142,93)",
-          "rgb(29,29,27)",
-          "rgb(9, 86, 70)",
-        ],
-        borderWidth: 2,
-      },
-    ],
-  };
+  dataGraficaTiposPorAño = inicializarDataGraficaTiposPorAño(primeros40_ordenados_estatal)
+  
   const ctx = document
     .getElementById("barplot_tipo_por_año_estatal")
     .getContext("2d"); //inicio a crear la gráfica
 
   chart_barplot_tipos_por_año = new Chart(ctx, {
     type: "bar",
-    data: data,
+    data: dataGraficaTiposPorAño,
     responsive: true,
     options: {interaction:{intersect: false,
       mode:'y'
@@ -268,21 +99,18 @@ Promise.all([csvCargado,csvTasaMedia]).then(() => {
     },
     plugins: plugin_actualizar_eleccion_cruzada
     
-  });
-
-  //Otra gráfica de Prueba
-  let primer_historico = generate_values_Tipo(1);
-  //console.log("Primeros historico:", primer_historico);
+  });//Inicializar la grafica
+  const dataGraficaHistorico = generarInsumosHistorico(tipos_de_delito[0])
   const ctx_hist = document
     .getElementById("lineplot_año_por_tipo_estatal")
     .getContext("2d");
-  chart = new Chart(ctx_hist, {
+  chart_lineplot_año_por_tipo_estatal = new Chart(ctx_hist, {
     type: "line",
     data: {
-      labels: generate_values_tasa_media(0).map((x)=>{return(x[0])}),
+      labels: dataGraficaHistorico.map((x)=>{return(x[0])}),
       datasets: [
         {
-          data: generate_values_tasa_media(0).map((x)=>{return(Math.round(parseFloat(x[1])*100000)/100000)}),
+          data: dataGraficaHistorico.map((x)=>{return(Math.round(parseFloat(x[1])*100000)/100000)}),
           backgroundColor: "rgba(179,142,93,0.8)",
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
@@ -319,20 +147,25 @@ Promise.all([csvCargado,csvTasaMedia]).then(() => {
         },
       },
     },
-  });
-//console.log("Graficas por default estatal. Creada")
-//una más: 
-//Tasa media para las 32 entidades. 
-chart.data.datasets[1].data=generate_values_tasa_media(0).map((x)=>{return(Math.round(parseFloat(x[2])*100000)/100000)})
-chart.update();
+  });//Inicializar la grafica
+
+  chart_lineplot_año_por_tipo_estatal.data.datasets[1].data=dataGraficaHistorico.map((x)=>{return(Math.round(parseFloat(x[2])*100000)/100000)})
+  chart_lineplot_año_por_tipo_estatal.update();
 });
 
-Promise.all([csvCargado,mesesEstatalCsvCargado]).then(()=>{
+Promise.all([cargandoDataAñoTipo,cargadoDataMesesEstatal]).then(()=>{
+
+    data_estatal_año_tipo=generarInsumosIncidenciaMensual(2025,tipos_de_delito[0])
+    dataGraficaMensual = inicializarDataGraficaMensual(data_estatal_año_tipo)
     const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
 
-    data_estatal_año_tipo=generate_values_meses_estatal(2025,0)
-    //console.log(data_estatal_año_tipo.map((x)=>{return parseFloat((x.split(","))[3].replace(/[\r\n"']/g, "").trim())}))
-    data_meses = {
+    //Revisar si el primer default tiene datos
+    const ctx_meses = document
+        .getElementById("barplot_meses")
+        .getContext("2d"); //inicio a crear la gráfica
+    stackedBar = new Chart(ctx_meses, {
+      type: 'bar',
+      data: {
       labels: meses,
       datasets: [{
         label: 'Delitos en Hidalgo (Aborto 2025)',
@@ -358,17 +191,7 @@ Promise.all([csvCargado,mesesEstatalCsvCargado]).then(()=>{
             ] ,
         borderWidth: 1
       }]
-    };
-    const image=new Image()
-    image.src = 'url(Datos/no_data.png)';
-    //Revisar si el primer default tiene datos
-
-    const ctx_meses = document
-        .getElementById("barplot_meses")
-        .getContext("2d"); //inicio a crear la gráfica
-    stackedBar = new Chart(ctx_meses, {
-      type: 'bar',
-      data: data_meses,
+        },
       options: {
         locale: "en-EN",
           scales: {
@@ -381,7 +204,6 @@ Promise.all([csvCargado,mesesEstatalCsvCargado]).then(()=>{
               }
           },
           maintainAspectRatio:false,
-          
       },
     });
   })

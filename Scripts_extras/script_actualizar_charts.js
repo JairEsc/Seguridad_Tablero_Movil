@@ -3,45 +3,82 @@
 //Una función para cada gráfica. Una para estatal y otra para municipal.
 ActualizarGraficaHistoricoEstatal=function(tipo_de_delito){
   //
+  const historico_actual =generarInsumosHistorico(tipo_de_delito)
+  console.log(historico_actual)
+  //actualizamos "data"
+  chart_lineplot_año_por_tipo_estatal.destroy();
+  const ctx_hist = document
+    .getElementById("lineplot_año_por_tipo_estatal")
+    .getContext("2d");
+  chart_lineplot_año_por_tipo_estatal = new Chart(ctx_hist, {
+    type: "line",
+    data: {
+      labels: historico_actual.map((x)=>{return(x[0])}),
+      datasets: [
+        {
+          data: historico_actual.map((x)=>{return(Math.round(parseFloat(x[1])*100000)/100000)}),
+          backgroundColor: "rgba(179,142,93,0.8)",
+          borderColor: "rgb(9, 86, 70)",
+          borderWidth: 1,
+          spanGaps: true,
+          label: ["Tasa de delito por cada mil habitantes"],
+        },
+        {
+          data: [],
+          backgroundColor: "rgb(98, 17, 50)",
+          borderColor: "rgba(0, 0, 0, 0.8)",
+          borderWidth: 1,
+          spanGaps: true,
+          label: ["Tasa Media Nacional"],
+        },
+      ],
+    },
+    options: {
+      locale: "en-EN",
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        chartArea: {
+          backgroundColor: "rgba(240, 240, 240, 1)",
+        },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => (`${ctx.dataset.label}: ${ctx.raw}`)
+          }
+        },
+      },
+      scales: {
+        y: {
+          ticks: {
+        precision:4
+      },
+          beginAtZero: false,
+        },
+      },
+    },
+  });
+  chart_lineplot_año_por_tipo_estatal.data.datasets[1].data=historico_actual.map((x)=>{return(Math.round(parseFloat(x[2])*100000)/100000)})
+  chart_lineplot_año_por_tipo_estatal.update();
 }
 ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
   //
 }
-ActualizarGraficaIncidenciaAnualEstatal=function(tipo_de_delito){
+ActualizarGraficaIncidenciaAnualEstatal=function(año){
   //
-}
-ActualizarGraficaIncidenciaAnualMunicipal=function(tipo_de_delito){
-  //
-}
-ActualizarGraficaIncidenciaMensualEstatal=function(tipo_de_delito){
-  //
-}
-ActualizarGraficaIncidenciaMensualMunicipal=function(tipo_de_delito){
-  //
-}
-  //---------------------------------------------------
-$("#año_dropdown").change(function () {
-  //Cambia el valor del año. //O sea que solo actualizamos las gráficas superiores
-  //generamos los nuevos valores para barplot de año
-  //actualizamos el objeto data que guarda los valores para el barplot de año
-  //destruimos la gráica anterior
-  //Creamos una con los datos actualizados
-  //console.log("Año actualizado a " + this.value);
-  let los40Actuales = generate_values_Año(parseInt(this.value)); //generamos los valores para la estatal de año
+  const los40Actuales = generarInsumosIncidenciaAnual(parseInt(año)); //generamos los valores para la estatal de año
   console.log(los40Actuales)
   //actualizamos "data"
-  los40Actuales_ordenados_estatal=ordenarPorValores(los40Actuales.map((x)=> {return(x[0])}),los40Actuales.map((x)=> {return(x[1])}))
-  //primeros40_ordenados_estatal=ordenarPorValores(primeros40.map((x)=> {return(x[0])}),primeros40.map((x)=> {return(x[1])}))//filtrar valores muy pequeños?
+  const los40Actuales_ordenados_estatal=ordenarPorValores(los40Actuales.map((x)=> {return(x[0])}),los40Actuales.map((x)=> {return(x[1])}))//filtrar valores muy pequeños?
+  ////primeros40_ordenados_estatal=ordenarPorValores(primeros40.map((x)=> {return(x[0])}),primeros40.map((x)=> {return(x[1])}))//filtrar valores muy pequeños?
+  const dataGraficaTiposPorAño = inicializarDataGraficaTiposPorAño(los40Actuales_ordenados_estatal)
 
-  data.datasets[0].data = los40Actuales_ordenados_estatal.valoresOrdenados; //Por ahora todo lo demás se queda igual que en el default
-  data.labels = los40Actuales_ordenados_estatal.tiposOrdenados.map((x)=>{if(sub_labels_clasificacion[x]){return(x+'...')}else{return(x)}}); //Por ahora todo lo demás se queda igual que en el default
   chart_barplot_tipos_por_año.destroy(); //Destruimos estatal de año
   const ctx = document
     .getElementById("barplot_tipo_por_año_estatal")
     .getContext("2d");
   chart_barplot_tipos_por_año = new Chart(ctx, {
     type: "bar",
-    data: data,
+    data: dataGraficaTiposPorAño,
     responsive: true,
     options: {interaction:{intersect: false,
       mode:'y'
@@ -77,11 +114,91 @@ $("#año_dropdown").change(function () {
         }
       }
     },
-  }); //Creamos una nueva chart estatal año
+  });
+}
+ActualizarGraficaIncidenciaAnualMunicipal=function(tipo_de_delito){
+  //
+}
+ActualizarGraficaIncidenciaMensualEstatal=function(valor_tipo,valor_año){
+  //
+    
+   
+  //Cuando ocurre el cambio de alguna, la gráfica de meses de municipio 
+  const meses_actual_est=generarInsumosIncidenciaMensual(valor_año,valor_tipo)
+  console.log(meses_actual_est)
+  stackedBar.destroy();
+  document.getElementById('barplot_meses').style.backgroundImage='none'
+  //console.log("Nuevos datos de meses: ")
+  //console.log(data_meses.datasets[0].data)
+  if(meses_actual_est.reduce((partialSum, a) => partialSum + a[1], 0)==0){
+    //console.log("era cero")
+    document.getElementById('barplot_meses').style.backgroundImage='url(Datos/no_data.png)';
+  }
+
+  const ctx_meses = document
+    .getElementById("barplot_meses")
+    .getContext("2d");
+    stackedBar= new Chart(ctx_meses, {
+      type: 'bar',
+      data: {
+      labels: meses_actual_est.map((x)=>{return(x[0])}),
+      datasets: [{
+        label: 'Delitos en Hidalgo' +'('+ valor_tipo + ' ' + valor_año+')',
+        data: meses_actual_est.map((x)=>{return parseFloat(x[1])}),
+        fill: false,
+            backgroundColor: [
+              "rgb(98,17,50)",
+              "rgb(157,36,73)",
+              "rgb(112,144,144)",
+              "rgb(212,193,156)",
+              "rgb(179,142,93)",
+              "rgb(29,29,27)",
+              "rgb(9, 86, 70)",
+            ],
+            borderColor:[
+              "rgba(98,17,50,0.1)",
+              "rgba(157,36,73,0.1)",
+              "rgba(112,144,144,0.1)",
+              "rgba(212,193,156,0.1)",
+              "rgba(179,142,93,0.1)",
+              "rgba(29,29,27,0.1)",
+              "rgba(9, 86, 70,0.1)",
+            ] ,
+        borderWidth: 1
+      }]
+        },
+      options: {locale: "en-EN",
+          scales: {
+              x: {
+                  stacked: true
+              },
+              y: {
+                ticks:{precision:0},
+                  stacked: true
+              }
+          },
+          maintainAspectRatio:false,
+      }
+    });
+
+// y estatal va a cambiar.
+}
+ActualizarGraficaIncidenciaMensualMunicipal=function(tipo_de_delito){
+  //
+}
+  //---------------------------------------------------
+$("#año_dropdown").change(function () {
+  //Cambia el valor del año. //O sea que solo actualizamos las gráficas superiores
+  //generamos los nuevos valores para barplot de año
+  //actualizamos el objeto data que guarda los valores para el barplot de año
+  //destruimos la gráica anterior
+  //Creamos una con los datos actualizados
+  //console.log("Año actualizado a " + this.value);
+   //Creamos una nueva chart estatal año
 
   ///Corregir.
 
-
+  ActualizarGraficaIncidenciaAnualEstatal(this.value)
 
   //Hacemos exactamente lo mismo pero para municipal año
   let primeros40_Mun = generate_values_Mun_Año(
@@ -158,63 +275,7 @@ $("#tipo_dropdown").change(function () {
   //actualizamos el objeto data que guarda los valores para el lineplot de tipo
   //destruimos la gráica anterior
   //Creamos una con los datos actualizados
-  let historico_actual =generate_values_tasa_media(tipos_de_delito.indexOf(this.value))
-  console.log(historico_actual)
-  //actualizamos "data"
-  chart.destroy();
-  const ctx_hist = document
-    .getElementById("lineplot_año_por_tipo_estatal")
-    .getContext("2d");
-  chart = new Chart(ctx_hist, {
-    type: "line",
-    data: {
-      labels: Array.from({ length: 11 }, (_, i) => 2015 + i),
-      datasets: [
-        {
-          data: historico_actual,
-          backgroundColor: "rgba(179,142,93,0.8)",
-          borderColor: "rgb(9, 86, 70)",
-          borderWidth: 1,
-          spanGaps: true,
-          label: ["Tasa de delito por cada mil habitantes"],
-        },
-        {
-          data: [],
-          backgroundColor: "rgb(98, 17, 50)",
-          borderColor: "rgba(0, 0, 0, 0.8)",
-          borderWidth: 1,
-          spanGaps: true,
-          label: ["Tasa Media Nacional"],
-        },
-      ],
-    },
-    options: {
-      locale: "en-EN",
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        chartArea: {
-          backgroundColor: "rgba(240, 240, 240, 1)",
-        },
-        tooltip: {
-          callbacks: {
-            label: (ctx) => (`${ctx.dataset.label}: ${ctx.raw}`)
-          }
-        },
-      },
-      scales: {
-        y: {
-          ticks: {
-        precision:4
-      },
-          beginAtZero: false,
-        },
-      },
-    },
-  });
-  chart.data.datasets[1].data=generate_values_tasa_media(tipos_de_delito.indexOf(this.value)).map((x)=>{return(Math.round(parseFloat(x.split(",")[2])*100000)/100000)})
-  chart.update();
-
+  ActualizarGraficaHistoricoEstatal(this.value)
 
   //Repetimos para la municipal
   let historico_actual_mun = generate_values_Mun_Tipo(
@@ -284,7 +345,9 @@ $("#tipo_dropdown").change(function () {
 
 $("#año_dropdown, #tipo_dropdown").change(function (){
   
-  
+  let valor_tipo = $("#tipo_dropdown").val();  
+  let valor_año = $("#año_dropdown").val(); 
+  ActualizarGraficaIncidenciaMensualEstatal(valor_tipo,valor_año)
 //si cambia cualquiera de los dos, los anteriores lidian con las gráficas. Ahora generamos la promesa
 let arr_area_promesa_actual=[]
 let arr_absoluto_promesa_actual=[]
@@ -354,45 +417,6 @@ Promesa_Actual_Actualizamos_Area.then(()=>{
   poligonos_map_h.resetStyle()
 })
 
-let valor_tipo = $("#tipo_dropdown").val();  
-let valor_año = $("#año_dropdown").val();  
-//Cuando ocurre el cambio de alguna, la gráfica de meses de municipio 
-let meses_actual_est = generate_values_meses_estatal(
-  valor_año,
-  tipos_de_delito.indexOf(valor_tipo)
-);
-stackedBar.destroy();
-document.getElementById('barplot_meses').style.backgroundImage='none'
-data_meses.datasets[0].data = meses_actual_est.map((x)=>{return parseFloat(x[1])});
-data_meses.datasets[0].label = 'Delitos en Hidalgo ('+valor_tipo+' '+valor_año+')'
-//console.log("Nuevos datos de meses: ")
-//console.log(data_meses.datasets[0].data)
-if(data_meses.datasets[0].data.reduce((partialSum, a) => partialSum + a, 0)==0){
-  //console.log("era cero")
-  //document.getElementById('barplot_meses').style.backgroundImage='url(Datos/no_data.png)';
-}
-
-const ctx_meses = document
-  .getElementById("barplot_meses")
-  .getContext("2d");
-  stackedBar= new Chart(ctx_meses, {
-    type: 'bar',
-    data: data_meses,
-    options: {locale: "en-EN",
-        scales: {
-            x: {
-                stacked: true
-            },
-            y: {
-              ticks:{precision:0},
-                stacked: true
-            }
-        },
-        maintainAspectRatio:false,
-    }
-  });
-
-// y estatal va a cambiar.
 
 
 let meses_actual_mun = generate_values_Año_Mun_Tipo(
