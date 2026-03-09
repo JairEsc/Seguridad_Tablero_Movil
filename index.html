@@ -44,8 +44,16 @@
             <div id="contenedor_historico" style="height: 30vh;width: 50vw;background-color: rgb(255, 255, 255);display: block">
                 <div id="contenedor_historico_titulo_select" style="width: 50vw;height: 2vh;display: flex;justify-content: center;">
                     <p class="Titulos_graphs">Gráfico Histórico para Tipo de Delito</p>
-                    <select style="display: block;margin-left: 0.5vw;height: 2vh;min-width: 8vw;max-width: 16vw;overflow-y: auto;" id="tipo_dropdown"  >
-                    </select>
+                    
+                    <input 
+                        list="tipo_delito_options" 
+                        id="tipo_dropdown" 
+                        placeholder="Busca un delito..."
+                        style="display: block; margin-left: 0.5vw; height: 2vh; min-width: 8vw; max-width: 16vw;"
+                    >
+                    
+                    <datalist id="tipo_delito_options">
+                    </datalist>
                 </div>
                 <div id="contenedor_historico_canvas" style="height: 28vh;">
                     <canvas class="canva_de_chartjs"  id="lineplot_año_por_tipo_estatal"  style="margin-left: 0.5vw; margin-right: 0.5vw; width: 49vw;height: 40vh;display: block;"></canvas>

@@ -15,20 +15,45 @@ select.dispatchEvent(new Event("change"));
 /* ------------------------------ */
 
 /*Alimentar dropdown de los tipos de delitos */
-function alimentarDropdownTiposDelito(tipos_de_delitos_array){
-  var optns = document.getElementById("tipo_dropdown");//Alimentamos el dropdown de delitos
-  for (element in tipos_de_delito) {
+// function alimentarDropdownTiposDelito(tipos_de_delitos_array){
+//   var optns = document.getElementById("tipo_dropdown");//Alimentamos el dropdown de delitos
+//   for (element in tipos_de_delito) {
+//     var opt = document.createElement("option");
+//     opt.value = tipos_de_delito[element];
+//     opt.innerHTML = tipos_de_delito[element];
+//     if(sub_labels_clasificacion[tipos_de_delito[element]]){
+//       opt.title=sub_labels_clasificacion[tipos_de_delito[element]]
+//       opt.innerHTML+='...'
+//       opt.style.backgroundColor='rgb(230, 230, 230)'
+//     }
+//     optns.appendChild(opt);
+//   }
+// }
+function alimentarDropdownTiposDelito(tipos_de_delito) {
+  // Ahora apuntamos al datalist, no al input
+  var lista = document.getElementById("tipo_delito_options");
+  
+  // Limpiamos contenido previo por si se vuelve a ejecutar
+  lista.innerHTML = "";
+
+  tipos_de_delito.forEach(delito => {
     var opt = document.createElement("option");
-    opt.value = tipos_de_delito[element];
-    opt.innerHTML = tipos_de_delito[element];
-    if(sub_labels_clasificacion[tipos_de_delito[element]]){
-      opt.title=sub_labels_clasificacion[tipos_de_delito[element]]
-      opt.innerHTML+='...'
-      opt.style.backgroundColor='rgb(230, 230, 230)'
+    
+    // El 'value' es lo que el usuario escribe y lo que se envía a la función
+    opt.value = delito; 
+
+    // Si existe una clasificación extra, la ponemos como 'label'
+    // Esto aparece como un texto secundario gris en muchos navegadores (Chrome/Edge)
+    if (sub_labels_clasificacion[delito]) {
+      opt.label = sub_labels_clasificacion[delito];
     }
-    optns.appendChild(opt);
-  }
+
+    lista.appendChild(opt);
+  });
+  const inputDelito = document.getElementById('tipo_dropdown');
+  inputDelito.addEventListener('focus', (e) => e.target.value = '');
 }
+
 /* ------------------------------ */
 
 function inicializarDataGraficaTiposPorAño(primeros40_ordenados_estatal){
