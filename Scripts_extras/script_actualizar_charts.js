@@ -83,6 +83,14 @@ ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
           spanGaps: true,
           label: ["Tasa de delito por cada mil habitantes"],
         },
+        {
+          data: historico_actual_mun.map((x) => x[2]),
+          backgroundColor: "rgb(98, 17, 50)",
+          borderColor: "rgb(9, 86, 70)",
+          borderWidth: 1,
+          spanGaps: true,
+          label: ["Promedio Estatal"],
+        },
       ],
     },
     options: {locale: "en-EN",
@@ -112,7 +120,7 @@ ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
 ActualizarGraficaIncidenciaAnualEstatal=function(año){
   //
   const los40Actuales = generarInsumosIncidenciaAnual(parseInt(año)); //generamos los valores para la estatal de año
-  console.log(los40Actuales)
+  //console.log(los40Actuales)
   //actualizamos "data"
   const los40Actuales_ordenados_estatal=ordenarPorValores(los40Actuales.map((x)=> {return(x[0])}),los40Actuales.map((x)=> {return(x[1])}))//filtrar valores muy pequeños?
   ////primeros40_ordenados_estatal=ordenarPorValores(primeros40.map((x)=> {return(x[0])}),primeros40.map((x)=> {return(x[1])}))//filtrar valores muy pequeños?
@@ -250,7 +258,7 @@ ActualizarGraficaIncidenciaMensualEstatal=function(valor_tipo,valor_año){
    
   //Cuando ocurre el cambio de alguna, la gráfica de meses de municipio 
   const meses_actual_est=generarInsumosIncidenciaMensual(valor_año,valor_tipo)
-  console.log(meses_actual_est)
+  //console.log(meses_actual_est)
   stackedBar.destroy();
   document.getElementById('barplot_meses').style.backgroundImage='none'
   //console.log("Nuevos datos de meses: ")
@@ -308,8 +316,171 @@ ActualizarGraficaIncidenciaMensualEstatal=function(valor_tipo,valor_año){
 
 // y estatal va a cambiar.
 }
-ActualizarGraficaIncidenciaMensualMunicipal=function(tipo_de_delito){
+ActualizarGraficaIncidenciaMensualMunicipal=function(valor_tipo,valor_año){
   //
+  let arr_area_promesa_actual=[]
+  let arr_absoluto_promesa_actual=[]
+  let Promesa_Actual_Actualizamos_Area = new Promise((resolve, reject) => {
+  //actualizamos el campo área con el ranking
+  
+  //slice a año seleccionado
+  // const inicio_promesa = 40 * 84*(valor_año - 2015) +1;//notar que no incluye al header.
+  // const fin_promesa = inicio_promesa + 40*84;
+  
+  // //ciclo 84 con tamaño de paso 40
+  // data_año_seleccionado=data_municipal_fetched_and_splitted.slice(inicio_promesa, fin_promesa)
+  // for (let ww = 0; ww < 84; ww++) {
+  //   arr_area_promesa_actual.push(
+  //         parseFloat(
+  //           data_año_seleccionado[ww*40+tipos_de_delito.indexOf(valor_tipo)]
+  //             .split(",")[4]
+  //             .replace(/[\r\n"']/g, "")
+  //             .trim()
+  //         )
+  //   );
+  //   arr_absoluto_promesa_actual.push(
+  //         parseFloat(
+  //           data_año_seleccionado[ww*40+tipos_de_delito.indexOf(valor_tipo)]
+  //             .split(",")[3]
+  //             .replace(/[\r\n"']/g, "")
+  //             .trim()
+  //         )
+  //   );
+  // }
+  //sé que están en el orden del csv. 
+  //que es el orden del array municipios. 
+  /*poligonos_map_h.eachLayer((layer) => {
+    layer.feature.properties.Area = arr_area_promesa[municipios.indexOf(layer.feature.properties.NOM_MUN)];
+  });*/
+  //Esto sería si quisiera ponerles el valor que les corresponde. Quiero el ranking. 
+  //replicamos el vector pero en lugar de valor tiene el ranking sobre los valores unicos
+  //e.g. [0,0,0,1,2,2,3]-> [1,1,1,2,3,3,4]
+  const tasasMunicipiales = generarInsumosColorearMapa(valor_año,valor_tipo).map(
+      (x)=>{
+        return(
+          [x.split(",")[2].replace(/[\r\n"']/g, "").trim(),//municipio
+          parseFloat(x.split(",")[4].replace(/[\r\n"']/g, "").trim()),//tasa_mpio
+          parseInt(x.split(",")[3].replace(/[\r\n"']/g, "").trim()),//total
+        ]
+        )
+      }
+    )
+  let valores_unicos = [...new Set(tasasMunicipiales.map((x)=>{return(x[1])}))].sort((a, b) => a - b); // Ordenamos de menor a mayor
+  let ranking_map = new Map(
+    valores_unicos.map((valor, index) => [valor, index + 1])
+  ); // Asignamos ranking
+    // Asignamos el ranking a cada municipio en Leaflet
+    poligonos_map_h.eachLayer((layer) => {
+      if(valores_unicos.length==0){//Por la clasificación de delitos nuevos
+        layer.feature.properties.Area =1
+        layer.feature.properties.COV_ID =1
+        layer.feature.properties.COV_ =0
+        layer.feature.properties.PERIMETER =0
+      }else{
+        const valoresActualizables_prev=actualizarPropiedadesGeojson(municipio=layer.feature.properties.NOM_MUN, 
+          tasasMunicipiales.map((x)=>x[0]),
+          tasasMunicipiales.map((x)=>x[1]),
+          tasasMunicipiales.map((x)=>x[2]), ranking_map=ranking_map)
+        const valoresActualizables= valoresActualizables_prev[0]===null?[1,0,0]:valoresActualizables_prev
+          //console.log(valoresActualizables)//Ranking, tasa, total
+
+        layer.feature.properties.Area =//Este 
+          (ranking_map.get(valores_unicos[valores_unicos.length - 1])+1-valoresActualizables[0])/ranking_map.get(valores_unicos[valores_unicos.length - 1])//
+        layer.feature.properties.COV_ID =
+          valoresActualizables[0]
+        layer.feature.properties.COV_ =
+          Math.round(
+            parseFloat(
+              10000 *
+                valoresActualizables[1]
+            )
+          ) / 10000; // Asignamos ranking en lugar del valor
+        layer.feature.properties.PERIMETER =
+          valoresActualizables[2];
+        }
+    });
+    resolve();
+    
+});
+Promesa_Actual_Actualizamos_Area.then(()=>{
+  poligonos_map_h.eachLayer((layer)=>{
+    layer.unbindTooltip(); // Elimina tooltip anterior
+    layer.bindTooltip(
+      'Municipio: ' + layer.feature.properties.NOM_MUN + '<br>' +
+      'Ranking: ' + layer.feature.properties.COV_ID + '<br>' +
+      'Tasa de delitos por cada mil: ' + layer.feature.properties.COV_ + '<br>'+
+      'Delitos registrados (seleccionado): ' + layer.feature.properties.PERIMETER
+    )});
+  poligonos_map_h.resetStyle()
+})
+  let meses_actual_mun = generarInsumosIncidenciaMensualMunicipal(
+      valor_año,valor_tipo,
+      municipio_actual
+    );
+    stackedBar_meses.destroy();
+    //data_meses_mun.datasets[0].data = meses_actual_mun.map((x)=>{return parseFloat((x.split(","))[4].replace(/[\r\n"']/g, "").trim())});
+    //console.log("datos mensuales: ")
+    //console.log(meses_actual_mun)
+    document.getElementById('barplot_meses_mun').style.backgroundImage='none'
+
+    if(meses_actual_mun[1].slice(3,15).reduce((partialSum, a) => partialSum + a, 0)==0){
+    //console.log("era cero")
+    document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
+    if(meses_actual_mun[2]===true){
+      console.log("Ni siquiera hay datos porque es delito nuevo")
+    }
+  }
+    //data_meses_mun.datasets[0].label = 'Total de Delitos ('+valor_tipo+' '+valor_año+')'
+    //if(data_meses_mun.datasets[0].data.reduce((partialSum, a) => partialSum + a, 0)==0){
+      //console.log("era cero")
+      //document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
+    //}
+    const ctx_meses_mun = document
+      .getElementById("barplot_meses_mun")
+      .getContext("2d");
+      stackedBar_meses = new Chart(ctx_meses_mun, {
+        type: 'bar',
+        data: {
+    labels: meses_actual_mun[0].slice(3,15),
+    datasets: [{
+      label: "Total de Delitos en "+municipio_actual +'('+ valor_tipo + ' ' + valor_año+')',
+      data: meses_actual_mun[1].slice(3,15),
+      fill: false,
+          backgroundColor: [
+            "rgb(98,17,50)",
+            "rgb(157,36,73)",
+            "rgb(112,144,144)",
+            "rgb(212,193,156)",
+            "rgb(179,142,93)",
+            "rgb(29,29,27)",
+            "rgb(9, 86, 70)",
+          ],
+          borderColor:[
+            "rgba(98,17,50,0.1)",
+            "rgba(157,36,73,0.1)",
+            "rgba(112,144,144,0.1)",
+            "rgba(212,193,156,0.1)",
+            "rgba(179,142,93,0.1)",
+            "rgba(29,29,27,0.1)",
+            "rgba(9, 86, 70,0.1)",
+          ] ,
+      borderWidth: 1
+    }]
+  },
+        options: {
+          locale: "en-EN",
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                  ticks:{precision:0},
+                    stacked: true
+                }
+            },
+            maintainAspectRatio:false,
+        }
+      });
 }
   //---------------------------------------------------
 $("#año_dropdown").change(function () {
@@ -371,137 +542,16 @@ $("#año_dropdown, #tipo_dropdown").change(function (){
   ActualizarGraficaIncidenciaMensualEstatal(valor_tipo,valor_año)
 
   ///Todo esto se puede simplificar. Solo es cambiar los colores del geojson dependiendo del año y tipo de delito.
-//si cambia cualquiera de los dos, los anteriores lidian con las gráficas. Ahora generamos la promesa
-let arr_area_promesa_actual=[]
-let arr_absoluto_promesa_actual=[]
-let Promesa_Actual_Actualizamos_Area = new Promise((resolve, reject) => {
-  //actualizamos el campo área con el ranking
-  let valor_tipo = $("#tipo_dropdown").val();  
-  let valor_año = $("#año_dropdown").val();  
-  //slice a año seleccionado
-  // const inicio_promesa = 40 * 84*(valor_año - 2015) +1;//notar que no incluye al header.
-  // const fin_promesa = inicio_promesa + 40*84;
+  //si cambia cualquiera de los dos, los anteriores lidian con las gráficas. Ahora generamos la promesa
+
+  ActualizarGraficaIncidenciaMensualMunicipal(valor_tipo, valor_año)
+  /////////////////PENDIENTE. Actualizar la de meses de municipal 
+
   
-  // //ciclo 84 con tamaño de paso 40
-  // data_año_seleccionado=data_municipal_fetched_and_splitted.slice(inicio_promesa, fin_promesa)
-  // for (let ww = 0; ww < 84; ww++) {
-  //   arr_area_promesa_actual.push(
-  //         parseFloat(
-  //           data_año_seleccionado[ww*40+tipos_de_delito.indexOf(valor_tipo)]
-  //             .split(",")[4]
-  //             .replace(/[\r\n"']/g, "")
-  //             .trim()
-  //         )
-  //   );
-  //   arr_absoluto_promesa_actual.push(
-  //         parseFloat(
-  //           data_año_seleccionado[ww*40+tipos_de_delito.indexOf(valor_tipo)]
-  //             .split(",")[3]
-  //             .replace(/[\r\n"']/g, "")
-  //             .trim()
-  //         )
-  //   );
-  // }
-  //sé que están en el orden del csv. 
-  //que es el orden del array municipios. 
-  /*poligonos_map_h.eachLayer((layer) => {
-    layer.feature.properties.Area = arr_area_promesa[municipios.indexOf(layer.feature.properties.NOM_MUN)];
-  });*/
-  //Esto sería si quisiera ponerles el valor que les corresponde. Quiero el ranking. 
-  //replicamos el vector pero en lugar de valor tiene el ranking sobre los valores unicos
-  //e.g. [0,0,0,1,2,2,3]-> [1,1,1,2,3,3,4]
-  const tasasMunicipiales = generarInsumosColorearMapa(valor_año,valor_tipo).map(
-      (x)=>{
-        return(
-          [x.split(",")[2].replace(/[\r\n"']/g, "").trim(),//municipio
-          parseFloat(x.split(",")[4].replace(/[\r\n"']/g, "").trim()),//tasa_mpio
-          parseInt(x.split(",")[3].replace(/[\r\n"']/g, "").trim()),//total
-        ]
-        )
-      }
-    )
-  let valores_unicos = [...new Set(tasasMunicipiales.map((x)=>{return(x[1])}))].sort((a, b) => a - b); // Ordenamos de menor a mayor
-    let ranking_map = new Map(
-      valores_unicos.map((valor, index) => [valor, index + 1])
-    ); // Asignamos ranking
-    // Asignamos el ranking a cada municipio en Leaflet
-    poligonos_map_h.eachLayer((layer) => {
-      const valoresActualizables=actualizarPropiedadesGeojson(municipio=layer.feature.properties.NOM_MUN, 
-        tasasMunicipiales.map((x)=>x[0]),
-        tasasMunicipiales.map((x)=>x[1]),
-        tasasMunicipiales.map((x)=>x[2]), ranking_map=ranking_map)
-        console.log(valoresActualizables)//Ranking, tasa, total
+  // // Forzar actualización .
 
-      layer.feature.properties.Area =
-        (ranking_map.get(valores_unicos[valores_unicos.length - 1])+1-valoresActualizables[0])/ranking_map.get(valores_unicos[valores_unicos.length - 1])//
-      layer.feature.properties.COV_ID =
-        valoresActualizables[0]
-      layer.feature.properties.COV_ =
-        Math.round(
-          parseFloat(
-            10000 *
-              valoresActualizables[1]
-          )
-        ) / 10000; // Asignamos ranking en lugar del valor
-      layer.feature.properties.PERIMETER =
-        valoresActualizables[2];
-    });
-    resolve();
-    
-});
-Promesa_Actual_Actualizamos_Area.then(()=>{
-  poligonos_map_h.eachLayer((layer)=>{
-    layer.unbindTooltip(); // Elimina tooltip anterior
-    layer.bindTooltip(
-      'Municipio: ' + layer.feature.properties.NOM_MUN + '<br>' +
-      'Ranking: ' + layer.feature.properties.COV_ID + '<br>' +
-      'Tasa de delitos por cada mil: ' + layer.feature.properties.COV_ + '<br>'+
-      'Delitos registrados (seleccionado): ' + layer.feature.properties.PERIMETER
-    )});
-  poligonos_map_h.resetStyle()
-})
-
-/////////////////PENDIENTE. Actualizar la de meses de municipal 
-
-let meses_actual_mun = generate_values_Año_Mun_Tipo(
-  valor_año,
-  municipio_actual,tipos_de_delito.indexOf(valor_tipo)
-);
-stackedBar_meses.destroy();
-data_meses_mun.datasets[0].data = meses_actual_mun.map((x)=>{return parseFloat((x.split(","))[4].replace(/[\r\n"']/g, "").trim())});
-//console.log("datos mensuales: ")
-//console.log(meses_actual_mun)
-document.getElementById('barplot_meses_mun').style.backgroundImage='none'
-
-data_meses_mun.datasets[0].label = 'Total de Delitos ('+valor_tipo+' '+valor_año+')'
-if(data_meses_mun.datasets[0].data.reduce((partialSum, a) => partialSum + a, 0)==0){
-  //console.log("era cero")
-  //document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
-}
-const ctx_meses_mun = document
-  .getElementById("barplot_meses_mun")
-  .getContext("2d");
-  stackedBar_meses = new Chart(ctx_meses_mun, {
-    type: 'bar',
-    data: data_meses_mun,
-    options: {
-      locale: "en-EN",
-        scales: {
-            x: {
-                stacked: true
-            },
-            y: {
-              ticks:{precision:0},
-                stacked: true
-            }
-        },
-        maintainAspectRatio:false,
-    }
-  });
-// Forzar actualización .
-
-click_on_nav(
-  document.getElementsByClassName("active_nav_seguridad")[0].innerHTML
-);
-document.getElementById('scroll_de_barplot_tipos').scrollTop=0
+  click_on_nav(
+    document.getElementsByClassName("active_nav_seguridad")[0].innerHTML
+  );
+  // document.getElementById('scroll_de_barplot_tipos').scrollTop=0
 })

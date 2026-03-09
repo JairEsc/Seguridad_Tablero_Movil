@@ -189,11 +189,11 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
         },
         {
           data: primer_historico_mun.map((x) => x[2]),
-          backgroundColor: "rgba(189, 47, 37, 0.8)",
+          backgroundColor: "rgb(98, 17, 50)",
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
           spanGaps: true,
-          label: ["Tasa de delito por cada mil habitantes"],
+          label: ["Promedio Estatal"],
         },
       ],
     },
@@ -256,7 +256,7 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
         tasasMunicipiales.map((x)=>x[0]),
         tasasMunicipiales.map((x)=>x[1]),
         tasasMunicipiales.map((x)=>x[2]), ranking_map=ranking_map)
-        console.log(valoresActualizables)//Ranking, tasa, total
+        //console.log(valoresActualizables)//Ranking, tasa, total
 
       layer.feature.properties.Area =
         (ranking_map.get(valores_unicos[valores_unicos.length - 1])+1-valoresActualizables[0])/ranking_map.get(valores_unicos[valores_unicos.length - 1])//

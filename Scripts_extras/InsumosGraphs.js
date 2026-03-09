@@ -81,6 +81,9 @@ function generarInsumosIncidenciaMensualMunicipal(año,tipo_de_delito,municipio)
         const municipio_r=r.replace(/"/g,'').split(",")[0];
         return (año_r==año && tipo_de_delito_r==tipo_de_delito && municipio_r==municipio)
     })
+    if(filtroAñoTipoMunicipio.length==0){
+        return [header, [0,0,0,0,0,0,0,0,0,0,0,0],true]
+    }
     const values = filtroAñoTipoMunicipio[0].split(",").map((v, i) => i < 3 ? v.replace(/"/g,'') : parseInt(v)) || [];
     return [header, values]
 }

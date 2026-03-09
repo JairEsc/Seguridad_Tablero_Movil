@@ -8,7 +8,7 @@
 const plugin_actualizar_eleccion_cruzada=[{
   id: 'customEventListener',
   afterEvent: (chart, evt) => {
-      console.log("Evento detectado:", evt.event.type);
+      //console.log("Evento detectado:", evt.event.type);
       if (evt.event.type == 'click') {
           const points = chart.getElementsAtEventForMode(evt.event, 'y', { intersect: false }, true);
           if (points.length > 0) {
@@ -16,7 +16,7 @@ const plugin_actualizar_eleccion_cruzada=[{
               const index = points[0].index;  // Índice de la barra clickeada
               
               let label = chart.data.labels[index];  // Obtener etiqueta de la barra
-              console.log(label)
+              //console.log(label)
               
 
               document.getElementById('tipo_dropdown').value = label.replace('...','');  // Cambiar el valor del dropdown
