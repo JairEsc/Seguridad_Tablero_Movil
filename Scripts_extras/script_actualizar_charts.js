@@ -3,6 +3,7 @@
 //Una función para cada gráfica. Una para estatal y otra para municipal.
 ActualizarGraficaHistoricoEstatal=function(tipo_de_delito){
   //
+  document.getElementById('lineplot_año_por_tipo_estatal').style.backgroundImage='none'
   const historico_actual =generarInsumosHistorico(tipo_de_delito)
   //console.log(historico_actual)
   //actualizamos "data"
@@ -59,13 +60,29 @@ ActualizarGraficaHistoricoEstatal=function(tipo_de_delito){
   });
   chart_lineplot_año_por_tipo_estatal.data.datasets[1].data=historico_actual.map((x)=>{return(Math.round(parseFloat(x[2])*100000)/100000)})
   chart_lineplot_año_por_tipo_estatal.update();
+  if(historico_actual.length==1){
+      //console.log("Ni siquiera hay datos porque es delito nuevo")
+      //"Ni siquiera hay datos porque es delito nuevo"
+      const canvas = document.getElementById('lineplot_año_por_tipo_estatal');
+
+      // Configuración de la imagen (siempre visible o condicional)
+      canvas.style.backgroundImage = 'url("Datos/few_data.png")';
+      canvas.style.backgroundRepeat = 'no-repeat';
+      canvas.style.backgroundPosition = 'center';
+      canvas.style.backgroundSize = 'contain'; 
+      canvas.style.backgroundColor = 'transparent'; // Asegura transparencia
+      //document.getElementById('lineplot_año_por_tipo_municipal').style.backgroundImage='url(Datos/no_data.png)';
+  }
 }
 ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
   //
+  document.getElementById('lineplot_año_por_tipo_municipal').style.backgroundImage='none'
   const historico_actual_mun = generarInsumosHistoricoMunicipal(
     tipo_de_delito,
     municipio_actual
   );
+  
+  
   chart_mun.destroy();
   const ctx_hist_mun = document
     .getElementById("lineplot_año_por_tipo_municipal")
@@ -102,9 +119,7 @@ ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
             label: (ctx) => (`${ctx.dataset.label}: ${ctx.raw}`)
           }
         },
-        chartArea: {
-          backgroundColor: "rgba(240, 240, 240, 1)", // Cambia este color a lo que desees
-        },
+
       },
       ticks: {
         precision:4
@@ -116,6 +131,20 @@ ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
       },
     },
   });
+  //console.log(historico_actual_mun)
+  if(historico_actual_mun.length==1){
+      console.log("Ni siquiera hay datos porque es delito nuevo")
+      //"Ni siquiera hay datos porque es delito nuevo"
+      const canvas = document.getElementById('lineplot_año_por_tipo_municipal');
+
+      // Configuración de la imagen (siempre visible o condicional)
+      canvas.style.backgroundImage = 'url("Datos/few_data.png")';
+      canvas.style.backgroundRepeat = 'no-repeat';
+      canvas.style.backgroundPosition = 'center';
+      canvas.style.backgroundSize = 'contain'; 
+      canvas.style.backgroundColor = 'transparent'; // Asegura transparencia
+      //document.getElementById('lineplot_año_por_tipo_municipal').style.backgroundImage='url(Datos/no_data.png)';
+  }
 }
 ActualizarGraficaIncidenciaAnualEstatal=function(año){
   //
@@ -426,9 +455,7 @@ Promesa_Actual_Actualizamos_Area.then(()=>{
     if(meses_actual_mun[1].slice(3,15).reduce((partialSum, a) => partialSum + a, 0)==0){
     //console.log("era cero")
     document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
-    if(meses_actual_mun[2]===true){
-      console.log("Ni siquiera hay datos porque es delito nuevo")
-    }
+    
   }
     //data_meses_mun.datasets[0].label = 'Total de Delitos ('+valor_tipo+' '+valor_año+')'
     //if(data_meses_mun.datasets[0].data.reduce((partialSum, a) => partialSum + a, 0)==0){

@@ -207,9 +207,7 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
             label: (ctx) => (`${ctx.dataset.label}: ${ctx.raw}`)
           }
         },
-        chartArea: {
-          backgroundColor: "rgba(240, 240, 240, 1)", // Cambia este color a lo que desees
-        },
+
       },
       scales: {
         y: {
