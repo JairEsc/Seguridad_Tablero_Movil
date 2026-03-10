@@ -36,10 +36,11 @@ intercensal_mun_2020=readxl::read_excel("Banco de datos infografias _Eduardo.xls
 intercensal_mun_2020=intercensal_mun_2020|>
   dplyr::select(Municipio,`Población total`)|>
   dplyr::filter(!is.na(Municipio)& Municipio!='Estatal')
-
+archivo_2026=list.files("../Datos/Preliminares/",pattern = "RNID",full.names = T)
+archivo_2025=list.files("../Datos/Preliminares/",pattern = "2025",full.names = T)
 ##Le pegamos la poblacion a cada bloque de 5 años. 
-datos_estatal_2025=read.csv("../Municipal-Delitos-2015-2025_ene2026.csv",check.names = F,fileEncoding = "latin1") |> 
-  rbind(read.csv("../RNID-Delitos_Municipal-2026-ene2026.csv",check.names = F,fileEncoding = "latin1"))
+datos_estatal_2025=read.csv(,check.names = F,fileEncoding = "latin1") |> 
+  rbind(read.csv(,check.names = F,fileEncoding = "latin1"))
 hidalgo_municipal_2025=datos_estatal_2025|>
   dplyr::filter(Clave_Ent==13) |> 
   dplyr::filter(`Cve. Municipio`<13100)

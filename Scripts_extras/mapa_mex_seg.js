@@ -98,9 +98,6 @@ L.Control.Watermark = L.Control.extend({
         return img;
     },
 
-    onRemove: function(map) {
-        // Nothing to do here
-    }
 });
 
 L.control.watermark = function(opts) {
@@ -108,55 +105,3 @@ L.control.watermark = function(opts) {
 }
 
 L.control.watermark({ position: 'bottomleft' }).addTo(map);
-
-/*
-var info_nacional = L.control();
-
-info_nacional.onAdd = function (map) {
-    this._div = L.DomUtil.create('div', 'info_tablero_seg'); // create a div with a class "info"
-    this.update();
-    return this._div;
-};
-
-// method that we will use to update the control based on feature properties passed
-info_nacional.update = function (props) {
-    this._div.innerHTML = '<h1>'+'Estado de Hidalgo'+'</h1>'+'<h4>'+'Estado Seleccionado'+'</h4>' 
-};
-
-info_nacional.addTo(map);
-
-
-
-var controlSearch = new L.Control.Search({
-    position:'bottomleft',		
-    layer: poligonos_map,
-    initial: false,
-    zoom: 12,
-    marker: false,
-    propertyName: 'NOM_MUN',
-});
-
-map.addControl(controlSearch);
-
-var legend_nac = L.control({position: 'bottomright'});
-
-legend_nac.onAdd = function (map) {
-
-    var div_nac = L.DomUtil.create("div", "info_tablero_seg legend legend_seguridad"),
-      colors = ["#00FF00", "#7FFF00", "#FFFF00", "#FFBF00", "#FF4000", "#FF0000"]; // Verde → Rojo
-
-    // Crear el gradiente
-    var gradient_nac = "linear-gradient(to right, " + colors.join(", ") + ")";
-
-    // Agregar el título y el gradiente
-    div_nac.innerHTML =
-    '<strong>Tasa de delitos por cada mil habitantes</strong><br>' +
-    '<div style="width: 10vw; height: 10px; background: ' + gradient_nac + ';"></div>';
-
-    // Agregar los valores de referencia debajo del gradiente
-    
-    return div_nac;
-};
-
-legend_nac.addTo(map);
-*/

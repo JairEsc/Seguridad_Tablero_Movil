@@ -352,35 +352,6 @@ ActualizarGraficaIncidenciaMensualMunicipal=function(valor_tipo,valor_año){
   let Promesa_Actual_Actualizamos_Area = new Promise((resolve, reject) => {
   //actualizamos el campo área con el ranking
   
-  //slice a año seleccionado
-  // const inicio_promesa = 40 * 84*(valor_año - 2015) +1;//notar que no incluye al header.
-  // const fin_promesa = inicio_promesa + 40*84;
-  
-  // //ciclo 84 con tamaño de paso 40
-  // data_año_seleccionado=data_municipal_fetched_and_splitted.slice(inicio_promesa, fin_promesa)
-  // for (let ww = 0; ww < 84; ww++) {
-  //   arr_area_promesa_actual.push(
-  //         parseFloat(
-  //           data_año_seleccionado[ww*40+tipos_de_delito.indexOf(valor_tipo)]
-  //             .split(",")[4]
-  //             .replace(/[\r\n"']/g, "")
-  //             .trim()
-  //         )
-  //   );
-  //   arr_absoluto_promesa_actual.push(
-  //         parseFloat(
-  //           data_año_seleccionado[ww*40+tipos_de_delito.indexOf(valor_tipo)]
-  //             .split(",")[3]
-  //             .replace(/[\r\n"']/g, "")
-  //             .trim()
-  //         )
-  //   );
-  // }
-  //sé que están en el orden del csv. 
-  //que es el orden del array municipios. 
-  /*poligonos_map_h.eachLayer((layer) => {
-    layer.feature.properties.Area = arr_area_promesa[municipios.indexOf(layer.feature.properties.NOM_MUN)];
-  });*/
   //Esto sería si quisiera ponerles el valor que les corresponde. Quiero el ranking. 
   //replicamos el vector pero en lugar de valor tiene el ranking sobre los valores unicos
   //e.g. [0,0,0,1,2,2,3]-> [1,1,1,2,3,3,4]

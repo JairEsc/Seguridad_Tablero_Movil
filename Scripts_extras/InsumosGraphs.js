@@ -1,4 +1,3 @@
-//El Jair del presente cree que está fácil refactorizar el código del Jair del pasado. 
 //supon que existe: 
 
 //csvTasaMedia
