@@ -75,7 +75,7 @@ var capasSeleccionadas = new Set();
 function style_seleccionado(layer) {
     layer.setStyle({
         weight: 5,
-        color: '#666', 
+        color: '#000000', 
         fillOpacity: 0.7
     });
     
@@ -90,10 +90,13 @@ function SelectFeature(e) {
         // Si ya está, lo quitamos (Deseleccionar)
         capasSeleccionadas.delete(layer);
         poligonos_map.resetStyle(layer);
+        PopGraficaHistoricoEstatal(layer.feature.properties.NOMGEO,document.getElementById("tipo_dropdown").value||delito_actual)
     } else {
         // Si no está, lo agregamos (Seleccionar)
         capasSeleccionadas.add(layer);
         style_seleccionado(layer);
+        PushGraficaHistoricoEstatal(layer.feature.properties.NOMGEO,document.getElementById("tipo_dropdown").value||delito_actual)
+
     }
 }
 
@@ -140,6 +143,16 @@ function seleccionarHidalgo(){
         style_seleccionado(layer);
     }
 });
+}
+function refrescarSeleccionadas() {
+    // Recorremos todas las capas del GeoJSON
+    poligonos_map.eachLayer(function(layer) {
+        if (capasSeleccionadas.has(layer)) {
+            style_seleccionado(layer);
+        } else {
+            poligonos_map.resetStyle(layer);
+        }
+    });
 }
 //Marca de Agua
 L.Control.Watermark = L.Control.extend({

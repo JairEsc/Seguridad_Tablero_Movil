@@ -3,7 +3,7 @@ let data_año_tipo_estatal; // Variable global para almacenar los datos procesad
 let data_meses_estatal; // Variable global para almacenar los datos procesados
 let data_tasa_media; // Variable global para almacenar los datos procesados
 let tipos_de_delito;
-
+let delito_actual='Aborto'
 let cargandoDataTasaMedia = new Promise((resolve, reject) => {
   fetch("Datos/CSVs_2/tasa_media_nacional.csv")
     .then((response) => response.text())

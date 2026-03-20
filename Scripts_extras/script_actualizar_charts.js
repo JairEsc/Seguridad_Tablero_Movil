@@ -22,7 +22,7 @@ ActualizarGraficaHistoricoEstatal=function(tipo_de_delito){
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
           spanGaps: true,
-          label: ["Tasa de delito por cada mil habitantes"],
+          label: ["Tasa de delito por cada mil habitantes (Hidalgo)"],
         },
         {
           data: [],
@@ -74,6 +74,15 @@ ActualizarGraficaHistoricoEstatal=function(tipo_de_delito){
       //document.getElementById('lineplot_año_por_tipo_municipal').style.backgroundImage='url(Datos/no_data.png)';
   }
 }
+const coloresRandom=[
+            "rgb(98,17,50)",
+            "rgb(157,36,73)",
+            "rgb(112,144,144)",
+            "rgb(212,193,156)",
+            "rgb(179,142,93)",
+            "rgb(29,29,27)",
+            "rgb(9, 86, 70)",
+          ]
 PushGraficaHistoricoEstatal=function(entidad,tipo_de_delito){
   const entidades_actuales=chart_lineplot_año_por_tipo_estatal.data.datasets.map((x)=>x.label)
   const index=entidades_actuales.indexOf("Tasa de delito por cada mil habitantes ("+entidad+')')
@@ -86,6 +95,7 @@ PushGraficaHistoricoEstatal=function(entidad,tipo_de_delito){
       return(x[1])
     }).map((x)=>{return(Math.round(parseFloat(x)*100000)/100000)})
     chart_lineplot_año_por_tipo_estatal.data.datasets[datasetsActualesLength].label="Tasa de delito por cada mil habitantes ("+entidad+')'
+    chart_lineplot_año_por_tipo_estatal.data.datasets[0].borderColor=coloresRandom[(datasetsActualesLength-1)%coloresRandom.length]
     chart_lineplot_año_por_tipo_estatal.update();
   }
 }
@@ -121,7 +131,7 @@ ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
           spanGaps: true,
-          label: ["Tasa de delito por cada mil habitantes"],
+          label: ["Tasa de delito por cada mil habitantes (Pachuca de Soto)"],
         },
         {
           data: historico_actual_mun.map((x) => x[2]),
@@ -537,7 +547,7 @@ $("#tipo_dropdown").change(function () {
   //destruimos la gráica anterior
   //Creamos una con los datos actualizados
   ActualizarGraficaHistoricoEstatal(this.value)
-
+  delito_actual=this.value
   //Repetimos para la municipal
   ActualizarGraficaHistoricoMunicipal(this.value)
   // Forzar actualización .
@@ -545,6 +555,7 @@ $("#tipo_dropdown").change(function () {
   click_on_nav(
     document.getElementsByClassName("active_nav_seguridad")[0].innerHTML
   );
+  limpiarTodasLasSelecciones();
 });
 
 //creamos una promesa de ordenar los municipios según la seleccion. Año y Tipo. 
@@ -569,7 +580,6 @@ $("#año_dropdown, #tipo_dropdown").change(function (){
   //si cambia cualquiera de los dos, los anteriores lidian con las gráficas. Ahora generamos la promesa
 
   ActualizarGraficaIncidenciaMensualMunicipal(valor_tipo, valor_año)
-  /////////////////PENDIENTE. Actualizar la de meses de municipal 
 
   
   // // Forzar actualización .
@@ -578,4 +588,7 @@ $("#año_dropdown, #tipo_dropdown").change(function (){
     document.getElementsByClassName("active_nav_seguridad")[0].innerHTML
   );
   // document.getElementById('scroll_de_barplot_tipos').scrollTop=0
+  colorearMapaEntidades(delito_actual=valor_tipo,año_actual=valor_año)
+  //limpiarTodasLasSelecciones()
+  refrescarSeleccionadas()
 })

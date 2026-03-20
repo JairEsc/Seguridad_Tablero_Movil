@@ -19,12 +19,12 @@ click_on_nav=function(nav_clickeada){
         maps[0].style.display='block'
         maps[1].style.display='none'
 
-        let interval = setInterval(() => {
-            if (maps[0].offsetWidth > 0 && maps[0].offsetHeight > 0) {
-                map.fitBounds(poligonos_map_h.getBounds());
-                clearInterval(interval);
-            }
-        }, 50); // Intenta cada 50ms
+        // let interval = setInterval(() => {
+        //     if (maps[0].offsetWidth > 0 && maps[0].offsetHeight > 0) {
+        //         map.fitBounds(poligonos_map_h.getBounds());
+        //         clearInterval(interval);
+        //     }
+        // }, 50); // Intenta cada 50ms
         graph_estatal_año.style.display='block'
         graph_municipal_año.style.display='none'
         graph_estatal_tipo.style.display='block'
@@ -36,12 +36,12 @@ click_on_nav=function(nav_clickeada){
         navs[1].className+=' active_nav_seguridad'
         maps[0].style.display='none'
         maps[1].style.display='block'
-        let interval = setInterval(() => {
-            if (maps[1].offsetWidth > 0 && maps[1].offsetHeight > 0) {
-                map_h.fitBounds(poligonos_map_h.getBounds());
-                clearInterval(interval);
-            }
-        }, 50); 
+        // let interval = setInterval(() => {
+        //     if (maps[1].offsetWidth > 0 && maps[1].offsetHeight > 0) {
+        //         map_h.fitBounds(poligonos_map_h.getBounds());
+        //         clearInterval(interval);
+        //     }
+        // }, 50); 
         graph_estatal_año.style.display='none'
         graph_municipal_año.style.display='block'
         graph_estatal_tipo.style.display='none'

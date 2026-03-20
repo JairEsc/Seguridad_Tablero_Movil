@@ -104,7 +104,7 @@ function colorearMapaEntidades(delito_actual='Aborto',año_actual='2026'){
           ); // Asignamos ranking
             // Asignamos el ranking a cada municipio en Leaflet
             poligonos_map.eachLayer((layer) => {
-              console.log(layer.feature.properties.NOMGEO)
+              //console.log(layer.feature.properties.NOMGEO)
               if(valores_unicos.length==0){//Por la clasificación de delitos nuevos
                 layer.feature.properties.Ranking=1
               }else{
@@ -113,7 +113,7 @@ function colorearMapaEntidades(delito_actual='Aborto',año_actual='2026'){
                   tasasEstatalesAñoAtual,
                   tasasEstatalesAñoAtual, 
                   ranking_map=ranking_map)
-                  console.log(valoresActualizables_prev)//Ranking, tasa, total
+                  //console.log(valoresActualizables_prev)//Ranking, tasa, total
                 const valoresActualizables= valoresActualizables_prev[0]===null?[1,0,0]:valoresActualizables_prev
 
                 layer.feature.properties.Valor =//Este 
