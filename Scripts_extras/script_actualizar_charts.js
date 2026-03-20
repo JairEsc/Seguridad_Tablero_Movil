@@ -107,6 +107,30 @@ PopGraficaHistoricoEstatal=function(entidad,tipo_de_delito){
     chart_lineplot_año_por_tipo_estatal.update();
   }
 }
+PushGraficaHistoricoMunicipal=function(municipio,tipo_de_delito){
+  const entidades_actuales=chart_mun.data.datasets.map((x)=>x.label)
+  const index=entidades_actuales.indexOf("Tasa de delito por cada mil habitantes ("+municipio+')')
+  if(index==-1){
+    const datasetsActualesLength=chart_mun.data.datasets.length
+    chart_mun.data.datasets.push(structuredClone(chart_mun.data.datasets[0]))
+    //Datos nuevos
+    const historicoEntidad=generarInsumosHistoricoMunicipal(tipo_de_delito=tipo_de_delito,entidad=municipio)
+    chart_mun.data.datasets[datasetsActualesLength].data=historicoEntidad.map((x)=>{
+      return(x[1])
+    }).map((x)=>{return(Math.round(parseFloat(x)*100000)/100000)})
+    chart_mun.data.datasets[datasetsActualesLength].label="Tasa de delito por cada mil habitantes ("+municipio+')'
+    chart_mun.data.datasets[0].borderColor=coloresRandom[(datasetsActualesLength-1)%coloresRandom.length]
+    chart_mun.update();
+  }
+}
+PopGraficaHistoricoMunicipal=function(municipio,tipo_de_delito){
+  const entidades_actuales=chart_mun.data.datasets.map((x)=>x.label)
+  const index=entidades_actuales.indexOf("Tasa de delito por cada mil habitantes ("+municipio+')')
+  if(index>-1){
+    chart_mun.data.datasets.splice(index, 1)
+    chart_mun.update();
+  }
+}
 ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
   //
   document.getElementById('lineplot_año_por_tipo_municipal').style.backgroundImage='none'
@@ -254,7 +278,7 @@ ActualizarGraficaIncidenciaAnualMunicipal=function(año){
     datasets: [
       {
         axis: "y",
-        label: "Tasa de delito por cada mil habitantes",
+        label: "Tasa de delito por cada mil habitantes ("+municipio_actual+')',
         data: los40Actuales_ordenados_municipal.valoresOrdenados,
         fill: false,
         backgroundColor: [
@@ -556,6 +580,7 @@ $("#tipo_dropdown").change(function () {
     document.getElementsByClassName("active_nav_seguridad")[0].innerHTML
   );
   limpiarTodasLasSelecciones();
+  limpiarMunicipios()
 });
 
 //creamos una promesa de ordenar los municipios según la seleccion. Año y Tipo. 

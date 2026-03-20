@@ -63,83 +63,117 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 	ext: 'png'
 }).addTo(map_h);
+function style_ent_h(feature) {
 
+    return {
+
+        fillColor: getColor_h(parseFloat(feature.properties.Area)),//cambia a area
+
+        opacity: 1,
+
+        color: feature.properties.NOM_MUN==municipio_actual?"#667":'white',
+
+        dashArray: feature.properties.NOM_MUN==municipio_actual?'0':'5',
+
+        fillOpacity: feature.properties.NOM_MUN==municipio_actual?0.4:0.4,
+
+        pane: feature.properties.NOM_MUN == municipio_actual ? 'municipioActual' : 'municipios'
+
+    };
+
+}
 function getColor_h(d) {
     return getGradientColor('#FF0000','#00FF00', d)
 }//color basado en gradiente
-
-layer_seleccionado_color_borde=function(feature){
-    if(feature.properties.NOM_MUN==municipio_actual){
-        return('#666')
-    }
-    else{
-        return("white")
-    }
-}
-function style_ent_h(feature) {
-    return {
-        fillColor: getColor_h(parseFloat(feature.properties.Area)),//cambia a area
-        opacity: 1,
-        color: feature.properties.NOM_MUN==municipio_actual?"#667":'white',
-        dashArray: feature.properties.NOM_MUN==municipio_actual?'0':'5',
-        fillOpacity: feature.properties.NOM_MUN==municipio_actual?0.4:0.4,
-        pane: feature.properties.NOM_MUN == municipio_actual ? 'municipioActual' : 'municipios'
-    };
-}
 poligonos_map_h = L.geoJson(hidalgo, {
-    style: style_ent_h,
+    style: style_ent_h, // Usamos tu función original de gradientes
     onEachFeature: onEachFeature_h,
-}).addTo(map_h)
+}).addTo(map_h);
+var municipiosSeleccionados = new Set(); 
 
-map_h.fitBounds(poligonos_map_h.getBounds());
-var ultimo_seleccionado='Hidalgo'
-
-function highlightFeature(e) {
-    var layer = e.target;
-
+function style_seleccionado_h(layer) {
     layer.setStyle({
-        weight: 5,
-        color: '#666',
-        fillOpacity: 0.7
+        weight: 4,
+        color: '#000000', // Borde negro para resaltar
+        fillOpacity: 0.7,
+        dashArray: '0' 
     });
-    layer.bringToFront();
+    if (layer.bringToFront) layer.bringToFront();
 }
-function click_on_feature(e) {
+
+function SelectFeature_h(e) {
     var layer = e.target;
-    //console.log(e.target.feature.properties.NOM_MUN)
-    layer.bringToFront();
-    municipio_actual=e.target.feature.properties.NOM_MUN;
-    //Forzar el cambio en cada grafica
-    var canvas_año_municipal = document.getElementById('año_dropdown');
-    var canvas_tipo_municipal = document.getElementById('tipo_dropdown');
-    var evento_forzado = new Event('change');
-    canvas_año_municipal.dispatchEvent(evento_forzado);
-    canvas_tipo_municipal.dispatchEvent(evento_forzado);
-    
-    poligonos_map_h.resetStyle();
+    var nombreMun = layer.feature.properties.NOM_MUN;
+    var delito = document.getElementById("tipo_dropdown").value || delito_actual;
 
-    info.update(layer.feature.properties);
+    if (municipiosSeleccionados.has(layer)) {
+        // DESELECCIONAR
+        municipiosSeleccionados.delete(layer);
+        poligonos_map_h.resetStyle(layer);
+        
+        // Llamada a tu función Pop municipal
+        PopGraficaHistoricoMunicipal(nombreMun, delito);
+    } else {
+        // SELECCIONAR
+        municipiosSeleccionados.add(layer);
+        style_seleccionado_h(layer);
+        
+        // Llamada a tu función Push municipal
+        PushGraficaHistoricoMunicipal(nombreMun, delito);
+    }
 
+    // Actualizar info panel si lo tienes
+    if (typeof info !== 'undefined') info.update(layer.feature.properties);
+}
+
+function highlightFeature_h(e) {
+    var layer = e.target;
+    // Solo mostramos hover si no está ya seleccionado
+    if (!municipiosSeleccionados.has(layer)) {
+        layer.setStyle({
+            weight: 3,
+            color: '#666',
+            fillOpacity: 0.5
+        });
+    }
 }
 
 function resetHighlight_h(e) {
-    poligonos_map_h.resetStyle();
-}
-function onEachFeature_h(feature, layer) {
-    if (feature.properties.NOM_MUN == municipio_actual) {
-        layer.bringToFront();
+    var layer = e.target;
+    if (!municipiosSeleccionados.has(layer)) {
+        poligonos_map_h.resetStyle(layer);
     }
-    layer.bindTooltip('Municipio: '+feature.properties.NOM_MUN+'<br>'+
-        'Ranking: '+feature.properties.Area+'<br>'+
-        'Tasa de delitos por cada mil: '+feature.properties.CVE_MUN+'<br>'
-    );
+}
+
+function onEachFeature_h(feature, layer) {
+    // Tooltip dinámico
+    layer.bindTooltip('<b>Municipio:</b> ' + feature.properties.NOM_MUN + '<br>' +
+                      '<b>Dato:</b> ' + feature.properties.Area);
 
     layer.on({
-        mouseover: highlightFeature,
+        mouseover: highlightFeature_h,
         mouseout: resetHighlight_h,
-        click: click_on_feature
+        click: SelectFeature_h
     });
-    
+}
+
+function seleccionarMunicipioDefault(nombre) {
+    poligonos_map_h.eachLayer(function(layer) {
+        if (layer.feature.properties.NOM_MUN === nombre) {
+            municipiosSeleccionados.add(layer);
+            style_seleccionado_h(layer);
+            // Opcional: Push inicial a la gráfica
+            // PushGraficaHistoricoMunicipal(nombre, delito_actual);
+        }
+    });
+}
+
+function limpiarMunicipios() {
+    municipio_actual='Pachuca de Soto';
+    poligonos_map_h.resetStyle();
+    municipiosSeleccionados.clear();
+    // Volvemos a seleccionar el default si es necesario
+    seleccionarMunicipioDefault(municipio_actual);
 }
 
 var info = L.control();
@@ -215,3 +249,4 @@ L.control.watermark = function(opts) {
 }
 
 L.control.watermark({ position: 'bottomleft' }).addTo(map_h);
+

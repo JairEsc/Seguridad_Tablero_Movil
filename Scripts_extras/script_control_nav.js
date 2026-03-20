@@ -4,6 +4,7 @@ graph_estatal_meses=document.getElementById("barplot_meses")
 graph_municipal_año=document.getElementById("barplot_tipo_por_año_municipal")
 graph_municipal_tipo=document.getElementById("lineplot_año_por_tipo_municipal")
 graph_municipal_meses=document.getElementById("barplot_meses_mun")
+let ubicado_en_municipal=false
 click_on_nav=function(nav_clickeada){
     document.getElementById('scroll_de_barplot_tipos').scrollTop=0
     //se clickeó alguna
@@ -33,15 +34,19 @@ click_on_nav=function(nav_clickeada){
         graph_municipal_meses.style.display='none'
     }
     else{
+
         navs[1].className+=' active_nav_seguridad'
         maps[0].style.display='none'
         maps[1].style.display='block'
-        // let interval = setInterval(() => {
-        //     if (maps[1].offsetWidth > 0 && maps[1].offsetHeight > 0) {
-        //         map_h.fitBounds(poligonos_map_h.getBounds());
-        //         clearInterval(interval);
-        //     }
-        // }, 50); 
+        if(!ubicado_en_municipal){
+            ubicado_en_municipal=true
+            let interval = setInterval(() => {
+                if (maps[1].offsetWidth > 0 && maps[1].offsetHeight > 0) {
+                    map_h.fitBounds(poligonos_map_h.getBounds());
+                    clearInterval(interval);
+                }
+            }, 50); 
+        }
         graph_estatal_año.style.display='none'
         graph_municipal_año.style.display='block'
         graph_estatal_tipo.style.display='none'

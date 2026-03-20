@@ -111,7 +111,7 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
           spanGaps: true,
-          label: ["Tasa de delito por cada mil habitantes"],
+          label: ["Tasa de delito por cada mil habitantes ("+municipio_actual+')'],
         },
         {
           data: primer_historico_mun.map((x) => x[2]),
@@ -282,5 +282,4 @@ VeryLargeCsvCargado.then(()=>{//Gráfico mensual
         maintainAspectRatio:false,
     }
   });
-
 })
