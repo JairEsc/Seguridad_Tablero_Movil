@@ -6,11 +6,13 @@
 //mesesEstatalCsvCargado
 //"Año","Tipo de delito","Mes","Conteo"
 
-function generarInsumosHistorico(tipo_de_delito){
+function generarInsumosHistorico(tipo_de_delito,entidad='Hidalgo'){
     //Regresa un vector de (longitud 2015-2025/2026) x 2 (tasa Hgo y tasa Nacional)
+    const header=data_tasa_media[0].split(",").map((x)=>x.replace(/"/g,''))
     const filtroPorTipoDeDelito=data_tasa_media.filter((r)=>{//Comentario para Jair del futuro: Los .csv están ordenados por fecha 2015->>. Los filter bien pordían detenerse después de la última coincidencia
         return(r.replace(/"/g,'').split(",")[1]==tipo_de_delito)})
-    return filtroPorTipoDeDelito.map((r)=>{return[parseInt(r.split(",")[0]),parseFloat(r.split(",")[4]),parseFloat(r.split(",")[2])]})//Año, Hgo, Nacional
+    const tasa_hidalgo_idx=header.indexOf("tasa_"+entidad)
+    return filtroPorTipoDeDelito.map((r)=>{return[parseInt(r.split(",")[0]),parseFloat(r.split(",")[tasa_hidalgo_idx]),parseFloat(r.split(",")[2])]})//Año, Hgo, Nacional
 }
 
 function generarInsumosIncidenciaAnual(año){
@@ -87,3 +89,45 @@ function generarInsumosIncidenciaMensualMunicipal(año,tipo_de_delito,municipio)
     return [header, values]
 }
 
+function colorearMapaEntidades(delito_actual='Aborto',año_actual='2026'){
+      
+        const header = data_tasa_media[0].split(",").map((x) => x.replace(/"/g, ""));
+        const tasasEstatales = data_tasa_media.filter((row,idx)=>{
+          return(idx===0 || row.replace(/"/g,'').split(",")[1]==delito_actual)
+        })
+        const tasasEstatalesAñoAtual=tasasEstatales.filter((row)=>{
+            return(row.split(",")[0]==año_actual)
+        })[0].split(",").slice(4).slice(32).map((x)=>parseFloat(x.replace(/\r/g, ""))) // Solo tasas de entidades
+          let valores_unicos = [...new Set(tasasEstatalesAñoAtual)].sort((a, b) => a - b); // Ordenamos de menor a mayor
+          let ranking_map = new Map(
+            valores_unicos.map((valor, index) => [valor, index + 1])
+          ); // Asignamos ranking
+            // Asignamos el ranking a cada municipio en Leaflet
+            poligonos_map.eachLayer((layer) => {
+              console.log(layer.feature.properties.NOMGEO)
+              if(valores_unicos.length==0){//Por la clasificación de delitos nuevos
+                layer.feature.properties.Ranking=1
+              }else{
+                const valoresActualizables_prev=actualizarPropiedadesGeojson(municipio=layer.feature.properties.NOMGEO, 
+                  tasasEstatales[0].split(",").slice(4).slice(32).map((x)=>x.replace("tasa_","").replace(/"/g,"").replace(/\r/g, "")),
+                  tasasEstatalesAñoAtual,
+                  tasasEstatalesAñoAtual, 
+                  ranking_map=ranking_map)
+                  console.log(valoresActualizables_prev)//Ranking, tasa, total
+                const valoresActualizables= valoresActualizables_prev[0]===null?[1,0,0]:valoresActualizables_prev
+
+                layer.feature.properties.Valor =//Este 
+                  (ranking_map.get(valores_unicos[valores_unicos.length - 1])+1-valoresActualizables[0])/ranking_map.get(valores_unicos[valores_unicos.length - 1])//
+                layer.feature.properties.Ranking=valoresActualizables[0]
+                }
+
+            })
+          poligonos_map.eachLayer((layer)=>{
+            layer.unbindTooltip(); // Elimina tooltip anterior
+            layer.bindTooltip(
+              'Entidad: ' + layer.feature.properties.NOMGEO + '<br>' +
+              'Ranking: ' + layer.feature.properties.Ranking + '<br>' +
+              'Tasa: ' + layer.feature.properties.Valor + '<br>' 
+            )});
+          poligonos_map.resetStyle()
+}

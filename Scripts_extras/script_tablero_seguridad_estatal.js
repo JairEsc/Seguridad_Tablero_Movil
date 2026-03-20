@@ -48,7 +48,10 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
   //Esto nada más ocurre la primera vez----
   //definimos un objeto para las sub-labels
   alimentarDropdownTiposDelito(tipos_de_delito)//Afecta a document.getElementById("tipo_dropdown")
-  
+  //Primer coloreado del mapa. 
+  colorearMapaEntidades();
+  map.fitBounds(poligonos_map_h.getBounds())
+  seleccionarHidalgo()
   ///
   let primeros40 = generarInsumosIncidenciaAnual(2026);
   primeros40_ordenados_estatal=ordenarPorValores(primeros40.map((x)=> {return(x[0])}),primeros40.map((x)=> {return(x[1])}))//filtrar valores muy pequeños?
@@ -115,7 +118,7 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
           spanGaps: true,
-          label: ["Tasa de delito por cada mil habitantes"],
+          label: "Tasa de delito por cada mil habitantes (Hidalgo)",
         },
         {
           data: [],
@@ -123,7 +126,7 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
           borderColor: "rgba(0, 0, 0, 0.8)",
           borderWidth: 1,
           spanGaps: true,
-          label: ["Promedio Nacional"],
+          label: "Promedio Nacional",
         },
       ],
     },

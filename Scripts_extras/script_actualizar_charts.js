@@ -74,6 +74,29 @@ ActualizarGraficaHistoricoEstatal=function(tipo_de_delito){
       //document.getElementById('lineplot_año_por_tipo_municipal').style.backgroundImage='url(Datos/no_data.png)';
   }
 }
+PushGraficaHistoricoEstatal=function(entidad,tipo_de_delito){
+  const entidades_actuales=chart_lineplot_año_por_tipo_estatal.data.datasets.map((x)=>x.label)
+  const index=entidades_actuales.indexOf("Tasa de delito por cada mil habitantes ("+entidad+')')
+  if(index==-1){
+    const datasetsActualesLength=chart_lineplot_año_por_tipo_estatal.data.datasets.length
+    chart_lineplot_año_por_tipo_estatal.data.datasets.push(structuredClone(chart_lineplot_año_por_tipo_estatal.data.datasets[0]))
+    //Datos nuevos
+    const historicoEntidad=generarInsumosHistorico(tipo_de_delito=tipo_de_delito,entidad=entidad)
+    chart_lineplot_año_por_tipo_estatal.data.datasets[datasetsActualesLength].data=historicoEntidad.map((x)=>{
+      return(x[1])
+    }).map((x)=>{return(Math.round(parseFloat(x)*100000)/100000)})
+    chart_lineplot_año_por_tipo_estatal.data.datasets[datasetsActualesLength].label="Tasa de delito por cada mil habitantes ("+entidad+')'
+    chart_lineplot_año_por_tipo_estatal.update();
+  }
+}
+PopGraficaHistoricoEstatal=function(entidad,tipo_de_delito){
+  const entidades_actuales=chart_lineplot_año_por_tipo_estatal.data.datasets.map((x)=>x.label)
+  const index=entidades_actuales.indexOf("Tasa de delito por cada mil habitantes ("+entidad+')')
+  if(index>-1){
+    chart_lineplot_año_por_tipo_estatal.data.datasets.splice(index, 1)
+    chart_lineplot_año_por_tipo_estatal.update();
+  }
+}
 ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
   //
   document.getElementById('lineplot_año_por_tipo_municipal').style.backgroundImage='none'
@@ -194,11 +217,14 @@ ActualizarGraficaIncidenciaAnualEstatal=function(año){
               
             }
           }
-        }
+        },
       }
     },
-  });
-}
+    plugins: plugin_actualizar_eleccion_cruzada
+  })
+  
+    
+  }
 ActualizarGraficaIncidenciaAnualMunicipal=function(año){
   //
   const primeros40_Mun = generarInsumosIncidenciaAnualMunicipal(parseInt(año),municipio_actual); //Aquí todavía falta la elección del municipio. Lo posponemos

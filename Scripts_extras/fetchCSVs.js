@@ -9,7 +9,8 @@ let cargandoDataTasaMedia = new Promise((resolve, reject) => {
     .then((response) => response.text())
     .then((data) => {
       data_tasa_media = data.split("\n");
-      resolve(); // La promesa se resuelve cuando los datos están listos
+      
+      resolve();
     });
 });
 let cargandoDataAñoTipo = new Promise((resolve, reject) => {
