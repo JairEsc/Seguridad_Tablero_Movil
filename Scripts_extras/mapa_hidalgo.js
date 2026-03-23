@@ -107,22 +107,17 @@ function SelectFeature_h(e) {
     var delito = document.getElementById("tipo_dropdown").value || delito_actual;
 
     if (municipiosSeleccionados.has(layer)) {
-        // DESELECCIONAR
         municipiosSeleccionados.delete(layer);
         poligonos_map_h.resetStyle(layer);
         
-        // Llamada a tu función Pop municipal
         PopGraficaHistoricoMunicipal(nombreMun, delito);
     } else {
-        // SELECCIONAR
         municipiosSeleccionados.add(layer);
         style_seleccionado_h(layer);
         
-        // Llamada a tu función Push municipal
         PushGraficaHistoricoMunicipal(nombreMun, delito);
     }
 
-    // Actualizar info panel si lo tienes
     if (typeof info !== 'undefined') info.update(layer.feature.properties);
 }
 
@@ -169,11 +164,20 @@ function seleccionarMunicipioDefault(nombre) {
 }
 
 function limpiarMunicipios() {
-    municipio_actual='Pachuca de Soto';
     poligonos_map_h.resetStyle();
     municipiosSeleccionados.clear();
     // Volvemos a seleccionar el default si es necesario
     seleccionarMunicipioDefault(municipio_actual);
+    info.update(); 
+}
+function refrescarSeleccionMunicipios() {
+    poligonos_map_h.eachLayer(function(layer) {
+        if (municipiosSeleccionados.has(layer)) {
+            style_seleccionado_h(layer);
+        } else {
+            poligonos_map_h.resetStyle(layer);
+        }
+    });
 }
 
 var info = L.control();

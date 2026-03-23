@@ -472,6 +472,7 @@ Promesa_Actual_Actualizamos_Area.then(()=>{
       'Delitos registrados (seleccionado): ' + layer.feature.properties.PERIMETER
     )});
   poligonos_map_h.resetStyle()
+  refrescarSeleccionMunicipios()
 })
   let meses_actual_mun = generarInsumosIncidenciaMensualMunicipal(
       valor_año,valor_tipo,
@@ -616,4 +617,6 @@ $("#año_dropdown, #tipo_dropdown").change(function (){
   colorearMapaEntidades(delito_actual=valor_tipo,año_actual=valor_año)
   //limpiarTodasLasSelecciones()
   refrescarSeleccionadas()
+
+      
 })

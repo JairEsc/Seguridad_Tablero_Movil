@@ -282,4 +282,5 @@ VeryLargeCsvCargado.then(()=>{//Gráfico mensual
         maintainAspectRatio:false,
     }
   });
+  seleccionarMunicipioDefault('Pachuca de Soto')
 })
