@@ -95,7 +95,7 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
   });
 
   //Otra gráfica de Prueba
-  const primer_historico_mun = generarInsumosHistoricoMunicipal('Aborto','Pachuca de Soto');
+  const primer_historico_mun = generarInsumosHistoricoMunicipal(delito_actual,'Pachuca de Soto');
   //console.log("Primeros historico:", primer_historico);
   const ctx_hist_mun = document
     .getElementById("lineplot_año_por_tipo_municipal")
@@ -144,7 +144,7 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
   });
 
   var año_sel_promesa = 2026;
-  var tipo_sel_promesa = 'Aborto';
+  var tipo_sel_promesa = delito_actual;
   ///Hasta aquí ya se crearon las gráficas por default del municipio pachuca (o pacula tal vez)
   let arr_area_promesa = [];
   let arr_absoluto_promesa = [];
@@ -227,7 +227,7 @@ VeryLargeCsvCargado.then(()=>{//Gráfico mensual
   //Aqui ya sabemos que es municipio 45
   //Año 2024(10)
   //Delito 0
-  datos_año_mun_delito=generarInsumosIncidenciaMensualMunicipal(2026,'Aborto','Pachuca de Soto')
+  datos_año_mun_delito=generarInsumosIncidenciaMensualMunicipal(2026,delito_actual,'Pachuca de Soto')
 
   //console.log(datos_año_mun_delito.map((x)=>{return parseFloat((x.split(","))[4].replace(/[\r\n"']/g, "").trim())}))
   //revisa si los datos son constantes. 
@@ -238,7 +238,7 @@ VeryLargeCsvCargado.then(()=>{//Gráfico mensual
   data_meses_mun = {
     labels: datos_año_mun_delito[0].slice(3,15),
     datasets: [{
-      label: "Total de Delitos (Aborto 2026)",
+      label: "Total de Delitos (" + delito_actual + " 2026)",
       data: datos_año_mun_delito[1].slice(3,15),
       fill: false,
           backgroundColor: [
