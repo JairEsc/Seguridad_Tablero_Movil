@@ -39,6 +39,7 @@ intercensal_mun_2020=intercensal_mun_2020|>
 archivo_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Delitos",full.names = T)
 archivo_2025=list.files("../Datos/Preliminares/",pattern = "2025",full.names = T)
 victimas_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Víctimas",full.names = T)
+datos_victimas_2026=read.csv(victimas_2026,check.names = F,fileEncoding = "latin1")
 ##Le pegamos la poblacion a cada bloque de 5 años. 
 datos_estatal_2025=read.csv(archivo_2025,check.names = F,fileEncoding = "latin1") |> 
   rbind(read.csv(archivo_2026,check.names = F,fileEncoding = "latin1"))
