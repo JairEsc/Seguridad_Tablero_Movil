@@ -39,8 +39,8 @@ intercensal_mun_2020=intercensal_mun_2020|>
 archivo_2026=list.files("../Datos/Preliminares/",pattern = "RNID",full.names = T)
 archivo_2025=list.files("../Datos/Preliminares/",pattern = "2025",full.names = T)
 ##Le pegamos la poblacion a cada bloque de 5 años. 
-datos_estatal_2025=read.csv(,check.names = F,fileEncoding = "latin1") |> 
-  rbind(read.csv(,check.names = F,fileEncoding = "latin1"))
+datos_estatal_2025=read.csv(archivo_2025,check.names = F,fileEncoding = "latin1") |> 
+  rbind(read.csv(archivo_2026,check.names = F,fileEncoding = "latin1"))
 hidalgo_municipal_2025=datos_estatal_2025|>
   dplyr::filter(Clave_Ent==13) |> 
   dplyr::filter(`Cve. Municipio`<13100)
