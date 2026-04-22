@@ -106,7 +106,7 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
       labels: primer_historico_mun.map((x) => x[0]), 
       datasets: [
         {
-          data: primer_historico_mun.map((x) => x[1]),
+          data: primer_historico_mun.map((x) => x[1]).map((x)=>{return(Math.round(parseFloat(x)*100000)/100000)}),
           backgroundColor: "rgba(179,142,93,0.8)",
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
@@ -114,7 +114,7 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
           label: ["Tasa de delito por cada mil habitantes ("+municipio_actual+')'],
         },
         {
-          data: primer_historico_mun.map((x) => x[2]),
+          data: primer_historico_mun.map((x) => x[2]).map((x)=>{return(Math.round(parseFloat(x)*100000)/100000)}),
           backgroundColor: "rgb(98, 17, 50)",
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
@@ -170,7 +170,7 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
     //replicamos el vector pero en lugar de valor tiene el ranking sobre los valores unicos
     //e.g. [0,0,0,1,2,2,3]-> [1,1,1,2,3,3,4]
 
-    let valores_unicos = [...new Set(tasasMunicipiales.map((x)=>{return(x[1])}))].sort((a, b) => a - b); // Ordenamos de menor a mayor
+    let valores_unicos = [...new Set(tasasMunicipiales.map((x)=>{return(x[1])}))].sort((a, b) => b - a); // Ordenamos de mayor a menor
     let ranking_map = new Map(
       valores_unicos.map((valor, index) => [valor, index + 1])
     ); // Asignamos ranking
@@ -183,7 +183,7 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
         //console.log(valoresActualizables)//Ranking, tasa, total
 
       layer.feature.properties.Area =
-        (ranking_map.get(valores_unicos[valores_unicos.length - 1])+1-valoresActualizables[0])/ranking_map.get(valores_unicos[valores_unicos.length - 1])//
+        (valoresActualizables[0])/ranking_map.get(valores_unicos[valores_unicos.length - 1])//
       layer.feature.properties.COV_ID =
         valoresActualizables[0]
       layer.feature.properties.COV_ =

@@ -122,6 +122,11 @@ function inicializarDataGraficaMensual(data_estatal_año_tipo){
     })
 }
 
+function force_click_on_nav(){
+  click_on_nav(
+      document.getElementsByClassName("active_nav_seguridad")[0].innerHTML
+    );
+}
 
 
 ordenarPorValores=function(tipos_de_delito, valores) {

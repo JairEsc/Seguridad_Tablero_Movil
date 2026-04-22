@@ -121,6 +121,8 @@ PushGraficaHistoricoMunicipal=function(municipio,tipo_de_delito){
     chart_mun.data.datasets[datasetsActualesLength].label="Tasa de delito por cada mil habitantes ("+municipio+')'
     chart_mun.data.datasets[0].borderColor=coloresRandom[(datasetsActualesLength-1)%coloresRandom.length]
     chart_mun.update();
+
+    ActualizarGraficaIncidenciaAnualMunicipal(año=document.getElementById("año_dropdown").value,municipio_actual)
   }
 }
 PopGraficaHistoricoMunicipal=function(municipio,tipo_de_delito){
@@ -147,10 +149,10 @@ ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
   chart_mun = new Chart(ctx_hist_mun, {
     type: "line",
     data: {
-      labels: historico_actual_mun.map((x) => x[0]),
+      labels: historico_actual_mun.map((x) => x[0]).map((x)=>{return(Math.round(parseFloat(x)*100000)/100000)}),
       datasets: [
         {
-          data: historico_actual_mun.map((x) => x[1]),
+          data: historico_actual_mun.map((x) => x[1]).map((x)=>{return(Math.round(parseFloat(x)*100000)/100000)}),
           backgroundColor: "rgba(179,142,93,0.8)",
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
@@ -158,7 +160,7 @@ ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
           label: ["Tasa de delito por cada mil habitantes (Pachuca de Soto)"],
         },
         {
-          data: historico_actual_mun.map((x) => x[2]),
+          data: historico_actual_mun.map((x) => x[2]).map((x)=>{return(Math.round(parseFloat(x)*100000)/100000)}),
           backgroundColor: "rgb(98, 17, 50)",
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
@@ -259,7 +261,7 @@ ActualizarGraficaIncidenciaAnualEstatal=function(año){
   
     
   }
-ActualizarGraficaIncidenciaAnualMunicipal=function(año){
+ActualizarGraficaIncidenciaAnualMunicipal=function(año,municipio_actual){
   //
   const primeros40_Mun = generarInsumosIncidenciaAnualMunicipal(parseInt(año),municipio_actual); //Aquí todavía falta la elección del municipio. Lo posponemos
 
@@ -425,7 +427,7 @@ ActualizarGraficaIncidenciaMensualMunicipal=function(valor_tipo,valor_año){
         )
       }
     )
-  let valores_unicos = [...new Set(tasasMunicipiales.map((x)=>{return(x[1])}))].sort((a, b) => a - b); // Ordenamos de menor a mayor
+  let valores_unicos = [...new Set(tasasMunicipiales.map((x)=>{return(x[1])}))].sort((a, b) => b-a); // Ordenamos de mayor a menor
   let ranking_map = new Map(
     valores_unicos.map((valor, index) => [valor, index + 1])
   ); // Asignamos ranking
@@ -445,7 +447,7 @@ ActualizarGraficaIncidenciaMensualMunicipal=function(valor_tipo,valor_año){
           //console.log(valoresActualizables)//Ranking, tasa, total
 
         layer.feature.properties.Area =//Este 
-          (ranking_map.get(valores_unicos[valores_unicos.length - 1])+1-valoresActualizables[0])/ranking_map.get(valores_unicos[valores_unicos.length - 1])//
+          (valoresActualizables[0])/ranking_map.get(valores_unicos[valores_unicos.length - 1])//
         layer.feature.properties.COV_ID =
           valoresActualizables[0]
         layer.feature.properties.COV_ =
@@ -556,13 +558,11 @@ $("#año_dropdown").change(function () {
   ActualizarGraficaIncidenciaAnualEstatal(this.value)
 
   //Hacemos exactamente lo mismo pero para municipal año
-  ActualizarGraficaIncidenciaAnualMunicipal(this.value)
+  ActualizarGraficaIncidenciaAnualMunicipal(this.value,municipio_actual)
 
   //El código está bien pero los cambios de display no se reflejan directamente.
   // voy a simular un reforzamiento de nav_active
-  click_on_nav(
-    document.getElementsByClassName("active_nav_seguridad")[0].innerHTML
-  );
+  force_click_on_nav();
 });
 
 $("#tipo_dropdown").change(function () {
@@ -577,9 +577,7 @@ $("#tipo_dropdown").change(function () {
   ActualizarGraficaHistoricoMunicipal(this.value)
   // Forzar actualización .
 
-  click_on_nav(
-    document.getElementsByClassName("active_nav_seguridad")[0].innerHTML
-  );
+  force_click_on_nav();
   limpiarTodasLasSelecciones();
   limpiarMunicipios()
 });
@@ -610,9 +608,7 @@ $("#año_dropdown, #tipo_dropdown").change(function (){
   
   // // Forzar actualización .
 
-  click_on_nav(
-    document.getElementsByClassName("active_nav_seguridad")[0].innerHTML
-  );
+  force_click_on_nav();
   // document.getElementById('scroll_de_barplot_tipos').scrollTop=0
   colorearMapaEntidades(delito_actual=valor_tipo,año_actual=valor_año)
   //limpiarTodasLasSelecciones()

@@ -109,16 +109,19 @@ function SelectFeature_h(e) {
     if (municipiosSeleccionados.has(layer)) {
         municipiosSeleccionados.delete(layer);
         poligonos_map_h.resetStyle(layer);
-        
         PopGraficaHistoricoMunicipal(nombreMun, delito);
     } else {
         municipiosSeleccionados.add(layer);
         style_seleccionado_h(layer);
-        
         PushGraficaHistoricoMunicipal(nombreMun, delito);
     }
 
     if (typeof info !== 'undefined') info.update(layer.feature.properties);
+    municipio_actual=layer.feature.properties.NOM_MUN
+    ActualizarGraficaIncidenciaAnualMunicipal(año=document.getElementById("año_dropdown").value,municipio_actual)
+    //force_click_on_nav();
+    //ActualizarGraficaIncidenciaMens(año=document.getElementById("año_dropdown").value,municipio_actual)
+    force_click_on_nav();
 }
 
 function highlightFeature_h(e) {

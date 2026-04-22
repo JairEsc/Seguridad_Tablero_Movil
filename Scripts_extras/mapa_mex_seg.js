@@ -56,7 +56,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 function style_ent(feature) {
         return {
-            fillColor: getColor_h(feature.properties.Valor),
+            fillColor: getColor_h(feature.properties.Area),
             weight: 5,
             opacity: 0.4,
             color: '#ffffff',
