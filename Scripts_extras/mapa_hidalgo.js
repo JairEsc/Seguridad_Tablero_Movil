@@ -121,6 +121,7 @@ function SelectFeature_h(e) {
     ActualizarGraficaIncidenciaAnualMunicipal(año=document.getElementById("año_dropdown").value,municipio_actual)
     //force_click_on_nav();
     //ActualizarGraficaIncidenciaMens(año=document.getElementById("año_dropdown").value,municipio_actual)
+    ActualizarSoloGraficaIncidenciaMensualMunicipal(valor_tipo=document.getElementById("tipo_dropdown").value,año=document.getElementById("año_dropdown").value,municipio_actual)
     force_click_on_nav();
 }
 
@@ -170,7 +171,7 @@ function limpiarMunicipios() {
     poligonos_map_h.resetStyle();
     municipiosSeleccionados.clear();
     // Volvemos a seleccionar el default si es necesario
-    seleccionarMunicipioDefault(municipio_actual);
+    seleccionarMunicipioDefault('Pachuca de Soto');
     info.update(); 
 }
 function refrescarSeleccionMunicipios() {

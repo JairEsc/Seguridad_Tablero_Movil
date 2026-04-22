@@ -407,6 +407,74 @@ ActualizarGraficaIncidenciaMensualEstatal=function(valor_tipo,valor_año){
 
 // y estatal va a cambiar.
 }
+ActualizarSoloGraficaIncidenciaMensualMunicipal=function(valor_tipo,valor_año,municipio_actual){
+  let meses_actual_mun = generarInsumosIncidenciaMensualMunicipal(
+      valor_año,valor_tipo,
+      municipio_actual
+    );
+    stackedBar_meses.destroy();
+    //data_meses_mun.datasets[0].data = meses_actual_mun.map((x)=>{return parseFloat((x.split(","))[4].replace(/[\r\n"']/g, "").trim())});
+    //console.log("datos mensuales: ")
+    //console.log(meses_actual_mun)
+    document.getElementById('barplot_meses_mun').style.backgroundImage='none'
+
+    if(meses_actual_mun[1].slice(3,15).reduce((partialSum, a) => partialSum + a, 0)==0){
+    //console.log("era cero")
+    document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
+    
+  }
+    //data_meses_mun.datasets[0].label = 'Total de Delitos ('+valor_tipo+' '+valor_año+')'
+    //if(data_meses_mun.datasets[0].data.reduce((partialSum, a) => partialSum + a, 0)==0){
+      //console.log("era cero")
+      //document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
+    //}
+    const ctx_meses_mun = document
+      .getElementById("barplot_meses_mun")
+      .getContext("2d");
+    stackedBar_meses = new Chart(ctx_meses_mun, {
+        type: 'bar',
+        data: {
+    labels: meses_actual_mun[0].slice(3,15),
+    datasets: [{
+      label: "Total de Delitos en "+municipio_actual +'('+ valor_tipo + ' ' + valor_año+')',
+      data: meses_actual_mun[1].slice(3,15),
+      fill: false,
+          backgroundColor: [
+            "rgb(98,17,50)",
+            "rgb(157,36,73)",
+            "rgb(112,144,144)",
+            "rgb(212,193,156)",
+            "rgb(179,142,93)",
+            "rgb(29,29,27)",
+            "rgb(9, 86, 70)",
+          ],
+          borderColor:[
+            "rgba(98,17,50,0.1)",
+            "rgba(157,36,73,0.1)",
+            "rgba(112,144,144,0.1)",
+            "rgba(212,193,156,0.1)",
+            "rgba(179,142,93,0.1)",
+            "rgba(29,29,27,0.1)",
+            "rgba(9, 86, 70,0.1)",
+          ] ,
+      borderWidth: 1
+    }]
+  },
+        options: {
+          locale: "en-EN",
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                  ticks:{precision:0},
+                    stacked: true
+                }
+            },
+            maintainAspectRatio:false,
+        }
+      });
+}
 ActualizarGraficaIncidenciaMensualMunicipal=function(valor_tipo,valor_año){
   //
   let arr_area_promesa_actual=[]
@@ -462,7 +530,6 @@ ActualizarGraficaIncidenciaMensualMunicipal=function(valor_tipo,valor_año){
         }
     });
     resolve();
-    
 });
 Promesa_Actual_Actualizamos_Area.then(()=>{
   poligonos_map_h.eachLayer((layer)=>{
@@ -476,72 +543,7 @@ Promesa_Actual_Actualizamos_Area.then(()=>{
   poligonos_map_h.resetStyle()
   refrescarSeleccionMunicipios()
 })
-  let meses_actual_mun = generarInsumosIncidenciaMensualMunicipal(
-      valor_año,valor_tipo,
-      municipio_actual
-    );
-    stackedBar_meses.destroy();
-    //data_meses_mun.datasets[0].data = meses_actual_mun.map((x)=>{return parseFloat((x.split(","))[4].replace(/[\r\n"']/g, "").trim())});
-    //console.log("datos mensuales: ")
-    //console.log(meses_actual_mun)
-    document.getElementById('barplot_meses_mun').style.backgroundImage='none'
-
-    if(meses_actual_mun[1].slice(3,15).reduce((partialSum, a) => partialSum + a, 0)==0){
-    //console.log("era cero")
-    document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
-    
-  }
-    //data_meses_mun.datasets[0].label = 'Total de Delitos ('+valor_tipo+' '+valor_año+')'
-    //if(data_meses_mun.datasets[0].data.reduce((partialSum, a) => partialSum + a, 0)==0){
-      //console.log("era cero")
-      //document.getElementById('barplot_meses_mun').style.backgroundImage='url(Datos/no_data.png)';
-    //}
-    const ctx_meses_mun = document
-      .getElementById("barplot_meses_mun")
-      .getContext("2d");
-      stackedBar_meses = new Chart(ctx_meses_mun, {
-        type: 'bar',
-        data: {
-    labels: meses_actual_mun[0].slice(3,15),
-    datasets: [{
-      label: "Total de Delitos en "+municipio_actual +'('+ valor_tipo + ' ' + valor_año+')',
-      data: meses_actual_mun[1].slice(3,15),
-      fill: false,
-          backgroundColor: [
-            "rgb(98,17,50)",
-            "rgb(157,36,73)",
-            "rgb(112,144,144)",
-            "rgb(212,193,156)",
-            "rgb(179,142,93)",
-            "rgb(29,29,27)",
-            "rgb(9, 86, 70)",
-          ],
-          borderColor:[
-            "rgba(98,17,50,0.1)",
-            "rgba(157,36,73,0.1)",
-            "rgba(112,144,144,0.1)",
-            "rgba(212,193,156,0.1)",
-            "rgba(179,142,93,0.1)",
-            "rgba(29,29,27,0.1)",
-            "rgba(9, 86, 70,0.1)",
-          ] ,
-      borderWidth: 1
-    }]
-  },
-        options: {
-          locale: "en-EN",
-            scales: {
-                x: {
-                    stacked: true
-                },
-                y: {
-                  ticks:{precision:0},
-                    stacked: true
-                }
-            },
-            maintainAspectRatio:false,
-        }
-      });
+  ActualizarSoloGraficaIncidenciaMensualMunicipal(valor_tipo,valor_año,'Pachuca de Soto')//municipio_actual)
 }
   //---------------------------------------------------
 $("#año_dropdown").change(function () {
