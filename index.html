@@ -42,9 +42,11 @@
         </div>
         <div id="segunda_mitad" style="height: 100vh; width: 50vw;display: block;">
             <div id="contenedor_historico" style="height: 30vh;width: 50vw;background-color: rgb(255, 255, 255);display: block">
-                <div id="contenedor_historico_titulo_select" style="width: 50vw;height: 2vh;display: flex;justify-content: center;">
-                    <p class="Titulos_graphs">Gráfico Histórico para Tipo de Delito</p>
-                    
+                <div id="contenedor_historico_titulo_select" style="width: 50vw;height: 2vh;display: flex;justify-content: space-between;">
+                    <div style="width: 50vw;height: 2vh;display: flex;justify-content: center;">
+
+                        <p class="Titulos_graphs">Gráfico Histórico para Tipo de Delito</p>
+                        
                     <input 
                         list="tipo_delito_options" 
                         id="tipo_dropdown" 
@@ -52,6 +54,16 @@
                         value="Aborto"
                         style="display: block; margin-left: 0.5vw; height: 2vh; min-width: 8vw; max-width: 16vw;"
                     >
+                    </div>
+                        
+                    <button id="fullsize_historico_btn" style="margin-left: 0.5vw;margin-right: 0.5vw; height: 2vh; padding: 0 0.5vw; display: flex; align-items: center; justify-content: center;" title="Vista en pantalla completa">
+                        <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+                            <path d="M16 3h3a2 2 0 0 1 2 2v3" />
+                            <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+                            <path d="M8 21H5a2 2 0 0 1-2-2v-3" />
+                        </svg>
+                    </button>
                     
                     <datalist id="tipo_delito_options">
                     </datalist>
@@ -61,6 +73,85 @@
                     <canvas class="canva_de_chartjs"  id="lineplot_año_por_tipo_municipal"  style="margin-left: 0.5vw; margin-right: 0.5vw; width: 49vw;height: 40vh;display: none;"></canvas>
                 </div>
             </div>
+            
+            <div id="modal_fullsize" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center;">
+                <div style="background-color: white; width: 90%; height: 90%; border-radius: 8px; padding: 20px; position: relative;">
+                    <button id="close_modal_btn" style="position: absolute; top: 10px; right: 10px; padding: 5px 10px; cursor: pointer;">Close</button>
+                    <div id="modal_content" style="width: 100%; height: 100%;"></div>
+                </div>
+            </div>
+            
+            <script>
+                let modalChart = null;
+                
+                document.getElementById('fullsize_historico_btn').addEventListener('click', function() {
+                    document.getElementById('modal_fullsize').style.display = 'flex';
+                    
+                    const modalContent = document.getElementById('modal_content');
+                    modalContent.innerHTML = '<canvas id="modal_chart_canvas" style="width: 100%; height: 100%;"></canvas>';
+                    
+                    const ctx = document.getElementById('modal_chart_canvas').getContext('2d');
+                    
+                    if (modalChart) {
+                        modalChart.destroy();
+                    }
+                    //Checamos cuál deberíamos mostrar: 
+                    const nav_actual=document.getElementsByClassName("active_nav_seguridad")[0].innerHTML
+                    const chart_actual=nav_actual==='Estatal'?chart_lineplot_año_por_tipo_estatal:chart_mun;
+                    modalChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            //No hay que crear etiquetas. Ya están en el chart original. 
+                            labels: chart_actual.data.labels,
+                            //labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                            datasets: chart_actual.data.datasets.map(dataset => ({
+                                label: dataset.label,
+                                data: dataset.data,
+                                borderColor: dataset.borderColor,
+                                backgroundColor: dataset.backgroundColor,
+                                tension: dataset.tension
+                            }))
+                            // datasets: [{
+                            //     label: 'Sample Data',
+                            //     data: [12, 19, 3, 5, 2, 3, 9, 12, 15, 18, 10, 8],
+                            //     borderColor: 'rgb(75, 192, 192)',
+                            //     backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            //     tension: 0.1
+                            // }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                             plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Tasa de incidencia de '+delito_actual +' ('+ nav_actual+')'
+                                }
+                            }
+                        }
+                    });
+                });
+                
+                document.getElementById('close_modal_btn').addEventListener('click', function() {
+                    document.getElementById('modal_fullsize').style.display = 'none';
+                    document.getElementById('modal_content').innerHTML = '';
+                    if (modalChart) {
+                        modalChart.destroy();
+                        modalChart = null;
+                    }
+                });
+                
+                document.getElementById('modal_fullsize').addEventListener('click', function(event) {
+                    if (event.target === this) {
+                        this.style.display = 'none';
+                        document.getElementById('modal_content').innerHTML = '';
+                        if (modalChart) {
+                            modalChart.destroy();
+                            modalChart = null;
+                        }
+                    }
+                });
+            </script>
             <div id="contenedor_barplot_horizontal" style="height: 40vh;width: 50vw;;background-color: rgb(255, 255, 255)">
                 <div id="contenedor_barplot_horizontal_titulo_select" style="width: 50vw;height: 2vh;display: flex;justify-content: center">
                     <p class="Titulos_graphs">Gráfico: Tasa de incidencia para Año</p>
