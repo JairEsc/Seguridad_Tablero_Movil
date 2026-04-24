@@ -164,9 +164,15 @@ function colorearMapaEntidades(delito_actual='Aborto',año_actual='2026'){
         const tasasEstatales = data_tasa_media.filter((row,idx)=>{
           return(idx===0 || row.replace(/"/g,'').split(",")[1]==delito_actual)
         })
-        const tasasEstatalesAñoAtual=tasasEstatales.filter((row)=>{
+        const tasasEstatalesAñoAtual_prev=tasasEstatales.filter((row)=>{
             return(row.split(",")[0]==año_actual)
-        })[0].split(",").slice(4).slice(32).map((x)=>parseFloat(x.replace(/\r/g, ""))) // Solo tasas de entidades
+        })
+        if(tasasEstatalesAñoAtual_prev.length==0){
+            poligonos_map.eachLayer((layer)=>{
+                layer.feature.properties.Area =1 })
+            return 0 }
+        
+        const tasasEstatalesAñoAtual=tasasEstatalesAñoAtual_prev[0].split(",").slice(4).slice(32).map((x)=>parseFloat(x.replace(/\r/g, ""))) // Solo tasas de entidades
           let valores_unicos = [...new Set(tasasEstatalesAñoAtual)].sort((a, b) => b-a); // Ordenamos de mayor a menor
           let ranking_map = new Map(
             valores_unicos.map((valor, index) => [valor, index + 1])

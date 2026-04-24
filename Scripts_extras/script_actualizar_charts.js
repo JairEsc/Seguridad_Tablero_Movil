@@ -60,7 +60,7 @@ ActualizarGraficaHistoricoEstatal=function(tipo_de_delito){
   });
   chart_lineplot_año_por_tipo_estatal.data.datasets[1].data=historico_actual.map((x)=>{return(Math.round(parseFloat(x[2])*100000)/100000)})
   chart_lineplot_año_por_tipo_estatal.update();
-  if(historico_actual.length==1){
+  if(historico_actual.length==0){
       //console.log("Ni siquiera hay datos porque es delito nuevo")
       //"Ni siquiera hay datos porque es delito nuevo"
       const canvas = document.getElementById('lineplot_año_por_tipo_estatal');
@@ -133,7 +133,7 @@ PopGraficaHistoricoMunicipal=function(municipio,tipo_de_delito){
     chart_mun.update();
   }
 }
-ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
+ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito,municipio_actual){
   //
   document.getElementById('lineplot_año_por_tipo_municipal').style.backgroundImage='none'
   const historico_actual_mun = generarInsumosHistoricoMunicipal(
@@ -191,13 +191,14 @@ ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito){
     },
   });
   //console.log(historico_actual_mun)
-  if(historico_actual_mun.length==1){
+  if(historico_actual_mun.length==0){
       console.log("Ni siquiera hay datos porque es delito nuevo")
       //"Ni siquiera hay datos porque es delito nuevo"
       const canvas = document.getElementById('lineplot_año_por_tipo_municipal');
 
       // Configuración de la imagen (siempre visible o condicional)
       canvas.style.backgroundImage = 'url("Datos/few_data.png")';
+
       canvas.style.backgroundRepeat = 'no-repeat';
       canvas.style.backgroundPosition = 'center';
       canvas.style.backgroundSize = 'contain'; 
@@ -575,8 +576,9 @@ $("#tipo_dropdown").change(function () {
   //Creamos una con los datos actualizados
   ActualizarGraficaHistoricoEstatal(this.value)
   delito_actual=this.value
+  municipio_actual='Pachuca de Soto'
   //Repetimos para la municipal
-  ActualizarGraficaHistoricoMunicipal(this.value)
+  ActualizarGraficaHistoricoMunicipal(this.value,municipio_actual)
   // Forzar actualización .
 
   force_click_on_nav();
