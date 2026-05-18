@@ -36,11 +36,13 @@ intercensal_mun_2020=readxl::read_excel("Banco de datos infografias _Eduardo.xls
 intercensal_mun_2020=intercensal_mun_2020|>
   dplyr::select(Municipio,`Población total`)|>
   dplyr::filter(!is.na(Municipio)& Municipio!='Estatal')
-archivo_2026=list.files("../Datos/Preliminares/",pattern = "RNID",full.names = T)
+archivo_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Delitos",full.names = T)
 archivo_2025=list.files("../Datos/Preliminares/",pattern = "2025",full.names = T)
+victimas_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Víctimas",full.names = T)
+datos_victimas_2026=read.csv(victimas_2026,check.names = F,fileEncoding = "latin1")
 ##Le pegamos la poblacion a cada bloque de 5 años. 
-datos_estatal_2025=read.csv(archivo_2025,check.names = F,fileEncoding = "latin1") |> 
-  rbind(read.csv(archivo_2026,check.names = F,fileEncoding = "latin1"))
+datos_estatal_2025=read.csv(archivo_2025[1],check.names = F,fileEncoding = "latin1") |> 
+  rbind(read.csv(archivo_2026[1],check.names = F,fileEncoding = "latin1"))
 hidalgo_municipal_2025=datos_estatal_2025|>
   dplyr::filter(Clave_Ent==13) |> 
   dplyr::filter(`Cve. Municipio`<13100)
@@ -157,10 +159,21 @@ datos_estatal_2025|>
   dplyr::mutate(Conteo=ifelse(is.na(Conteo),0,Conteo))|>
   write.csv("../Datos/CSVs_2/delitos por mes_15-24_estatal.csv",row.names = F,fileEncoding = "UTF-8")
 
+
+#//Cambio. Guardamos las tasas de todos los estados
+tasa_ent=datos_estatal_2025 |>
+  dplyr::ungroup() |>
+  dplyr::select(Año, `Tipo de delito`, Entidad, total, tasa) |>
+  tidyr::pivot_wider(
+    names_from = Entidad,
+    values_from = c(total, tasa),
+    names_glue = "{.value}_{Entidad}"
+  )
+
 tasa_hgo=datos_estatal_2025|>
   dplyr::ungroup()|>
   dplyr::select(Entidad,Año,`Tipo de delito`,tasa,total)|>
-  dplyr::filter(Entidad=='Hidalgo') |> 
+  #dplyr::filter(Entidad=='Hidalgo') |> 
   dplyr::group_by(Año,`Tipo de delito`)|>
   dplyr::summarise(tasa_media_hgo=mean(tasa),total_hgo=sum(total))
 tasa_nac=datos_estatal_2025|>
@@ -168,11 +181,11 @@ tasa_nac=datos_estatal_2025|>
   dplyr::select(Entidad,Año,`Tipo de delito`,tasa,total)|>
   dplyr::group_by(Año,`Tipo de delito`)|>
   dplyr::summarise(tasa_media_nac=mean(tasa),total_nac=sum(total))
-tasa_nac=tasa_nac |> 
-  merge(tasa_hgo,by=c('Año','Tipo de delito'))
-tasa_nac=tasa_nac |> 
-  dplyr::mutate(prop_totales=round(100*total_hgo/total_nac,2))
-tasa_nac |> write.csv("../Datos/CSVs_2/tasa_media_nacional.csv",fileEncoding = "UTF-8",row.names = F)
+tasa_ent=tasa_nac |> 
+  merge(tasa_ent,by=c('Año','Tipo de delito'))
+# tasa_ent=tasa_ent |> 
+#   dplyr::mutate(prop_totales=round(100*total_hgo/total_nac,2))
+tasa_ent |> write.csv("../Datos/CSVs_2/tasa_media_nacional.csv",fileEncoding = "UTF-8",row.names = F)
 
 
 hidalgo_municipal_2025_2|>

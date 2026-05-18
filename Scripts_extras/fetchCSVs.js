@@ -3,13 +3,14 @@ let data_año_tipo_estatal; // Variable global para almacenar los datos procesad
 let data_meses_estatal; // Variable global para almacenar los datos procesados
 let data_tasa_media; // Variable global para almacenar los datos procesados
 let tipos_de_delito;
-
+let delito_actual='...'
 let cargandoDataTasaMedia = new Promise((resolve, reject) => {
   fetch("Datos/CSVs_2/tasa_media_nacional.csv")
     .then((response) => response.text())
     .then((data) => {
       data_tasa_media = data.split("\n");
-      resolve(); // La promesa se resuelve cuando los datos están listos
+      
+      resolve();
     });
 });
 let cargandoDataAñoTipo = new Promise((resolve, reject) => {
@@ -20,6 +21,8 @@ let cargandoDataAñoTipo = new Promise((resolve, reject) => {
       tipos_de_delito = data_año_tipo_estatal
         .slice(-48,-1)
         .map((x)=>x.replace(/"/g,'').split(",")[1]);
+        delito_actual=tipos_de_delito[randomInteger(0,tipos_de_delito.length-1)]
+        document.getElementById("tipo_dropdown").value=delito_actual;
       resolve(); // La promesa se resuelve cuando los datos están listos
     });
 });
@@ -53,3 +56,5 @@ let VeryLargeCsvCargado = new Promise((resolve, reject) => {
       resolve(); // La promesa se resuelve cuando los datos están listos
     });
 });
+
+let randomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;

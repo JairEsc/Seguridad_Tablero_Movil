@@ -48,7 +48,10 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
   //Esto nada más ocurre la primera vez----
   //definimos un objeto para las sub-labels
   alimentarDropdownTiposDelito(tipos_de_delito)//Afecta a document.getElementById("tipo_dropdown")
-  
+  //Primer coloreado del mapa. 
+  colorearMapaEntidades(delito_actual=delito_actual,año_actual='2026');
+  map.fitBounds(poligonos_map_h.getBounds())
+  seleccionarHidalgo()
   ///
   let primeros40 = generarInsumosIncidenciaAnual(2026);
   primeros40_ordenados_estatal=ordenarPorValores(primeros40.map((x)=> {return(x[0])}),primeros40.map((x)=> {return(x[1])}))//filtrar valores muy pequeños?
@@ -100,7 +103,7 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
     plugins: plugin_actualizar_eleccion_cruzada
     
   });//Inicializar la grafica
-  const dataGraficaHistorico = generarInsumosHistorico(tipos_de_delito[0])
+  const dataGraficaHistorico = generarInsumosHistorico(delito_actual)
   const ctx_hist = document
     .getElementById("lineplot_año_por_tipo_estatal")
     .getContext("2d");
@@ -115,7 +118,7 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
           spanGaps: true,
-          label: ["Tasa de delito por cada mil habitantes"],
+          label: "Tasa de delito por cada mil habitantes (Hidalgo)",
         },
         {
           data: [],
@@ -123,7 +126,7 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
           borderColor: "rgba(0, 0, 0, 0.8)",
           borderWidth: 1,
           spanGaps: true,
-          label: ["Promedio Nacional"],
+          label: "Promedio Nacional",
         },
       ],
     },
@@ -155,7 +158,7 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
 
 Promise.all([cargandoDataAñoTipo,cargadoDataMesesEstatal]).then(()=>{
 
-    data_estatal_año_tipo=generarInsumosIncidenciaMensual(2026,tipos_de_delito[0])
+    data_estatal_año_tipo=generarInsumosIncidenciaMensual(2026,delito_actual)
     dataGraficaMensual = inicializarDataGraficaMensual(data_estatal_año_tipo)
     const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
 
@@ -168,7 +171,7 @@ Promise.all([cargandoDataAñoTipo,cargadoDataMesesEstatal]).then(()=>{
       data: {
       labels: meses,
       datasets: [{
-        label: 'Delitos en Hidalgo (Aborto 2026)',
+        label: 'Delitos en Hidalgo ('+delito_actual+' 2026)',
         data: data_estatal_año_tipo.map((x)=>{return parseFloat(x[1])}),
         fill: false,
             backgroundColor: [
