@@ -36,7 +36,7 @@ intercensal_mun_2020=readxl::read_excel("Banco de datos infografias _Eduardo.xls
 intercensal_mun_2020=intercensal_mun_2020|>
   dplyr::select(Municipio,`Población total`)|>
   dplyr::filter(!is.na(Municipio)& Municipio!='Estatal')
-archivo_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Delitos",full.names = T)
+archivo_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Delitos",full.names = T) |> rev()
 archivo_2025=list.files("../Datos/Preliminares/",pattern = "2025",full.names = T)
 victimas_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Víctimas",full.names = T)
 datos_victimas_2026=read.csv(victimas_2026,check.names = F,fileEncoding = "latin1")
