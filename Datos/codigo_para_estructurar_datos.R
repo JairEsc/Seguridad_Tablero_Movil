@@ -42,7 +42,7 @@ victimas_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Víctimas",ful
 #datos_victimas_2026=read.csv(victimas_2026,check.names = F,fileEncoding = "latin1")
 ##Le pegamos la poblacion a cada bloque de 5 años. 
 datos_estatal_2025=read.csv(archivo_2025[1],check.names = F,fileEncoding = "latin1") |> 
-  rbind(read.csv(archivo_2026[3],check.names = F,fileEncoding = "latin1"))
+  rbind(read.csv(archivo_2026[4],check.names = F,fileEncoding = "utf-8"))
 hidalgo_municipal_2025=datos_estatal_2025|>
   dplyr::filter(Clave_Ent==13) |> 
   dplyr::filter(`Cve. Municipio`<13100)
@@ -59,9 +59,24 @@ datos_estatal_2025=datos_estatal_2025|>
   dplyr::summarise_all(sum)
 ##Lo hacemos con joins mejor
 
+##// Cambiamos a CONAPO
+conapo_proy_pob="../../../Reutilizables/Demograficos/CONAPO_pobproy_quinq.csv" |> read.csv()
+conapo_proy_pob=conapo_proy_pob |> 
+  dplyr::filter(ANO%in%c(2015:2026)) |> 
+  dplyr::select(CLAVE,NOM_ENT,NOM_MUN,ANO:POB_TOTAL) |> 
+  dplyr::group_by(CLAVE,NOM_ENT,NOM_MUN,ANO) |> 
+  dplyr::summarise(pobtot=sum(POB_TOTAL,na.rm = T)) |> 
+  dplyr::mutate(CLAVE=sprintf("%05d",CLAVE))
+poblacion_por_años=conapo_proy_pob |> 
+  dplyr::mutate(
+  `Entidad federativa`=NOM_ENT,
+  Año=ANO
+  ) |> 
+  dplyr::group_by(`Entidad federativa`,Año) |> 
+  dplyr::summarise(`Población total`=sum(pobtot,na.rm=T))
 
 #el de 2020:2025 tambien
-nacional2020 =nacional2020 |> dplyr::rename(`Población total`=`2020...9`)
+#nacional2020 =nacional2020 |> dplyr::rename(`Población total`=`2020...9`)
 poblacion_por_años=c(2015:2026) |> lapply(
   \(z){
     if(z>=2020){
@@ -75,7 +90,8 @@ poblacion_por_años=c(2015:2026) |> lapply(
   }
 )
 
-poblacion_por_años=do.call(rbind,poblacion_por_años)
+#poblacion_por_años=do.call(rbind,poblacion_por_años)
+##Línea para verificar que las entidades estén bien escritas
 datos_estatal_2025$Entidad |> unique() |> lapply(\(w){w%in%poblacion_por_años$`Entidad federativa`}) |> unlist() |> all()
 
 
@@ -97,8 +113,8 @@ hidalgo_municipal_2025$total=rowSums(hidalgo_municipal_2025|>dplyr::select(Enero
 hidalgo_municipal_2025=hidalgo_municipal_2025|>
   dplyr::select(Año,Municipio,`Tipo de delito`,Enero:Diciembre,total)
 
-##Le pegamos del 2015 a 2019 la poblacion
-hidalgo_municipal_2025$pobtot=rep(0,nrow(hidalgo_municipal_2025))
+##Le pegamos del 2015 a 2019 la poblacion 
+#hidalgo_municipal_2025$pobtot=rep(0,nrow(hidalgo_municipal_2025))
 hidalgo_municipal_2025=hidalgo_municipal_2025|>
   dplyr::arrange(Año,Municipio,`Tipo de delito`)
 hidalgo_municipal_2025$`Tipo de delito`[hidalgo_municipal_2025$`Tipo de delito`%in%c(
@@ -108,20 +124,28 @@ hidalgo_municipal_2025_2=hidalgo_municipal_2025|>
   dplyr::group_by(Año,Municipio,`Tipo de delito`)|>
   dplyr::summarise_all(sum)
 ##Rellenamos poblaciones
-
-poblacion_por_años_municipal=c(2015:2026) |> lapply(
-  \(z){
-    if(z>=2020){
-      w=intercensal_mun_2020|> dplyr::mutate(Municipio=stringr::str_squish (gsub('\\*','',Municipio)))
-    }
-    else{
-      w=intercensal_mun_2015_2 |> dplyr::mutate(Municipio=stringr::str_squish (gsub('\\*','',Municipio)))
-    }
-    w$Año=z
-    return(w)
-  }
-)
-poblacion_por_años_municipal=do.call(rbind,poblacion_por_años_municipal)
+poblacion_por_años_municipal=conapo_proy_pob |> 
+  dplyr::ungroup() |> 
+  dplyr::filter(NOM_ENT=='Hidalgo') |> 
+  dplyr::rename(
+    Municipio=NOM_MUN,
+    `Población total`=pobtot,
+    Año=ANO
+  ) |> 
+  dplyr::select(Municipio,`Población total`,Año) 
+# poblacion_por_años_municipal=c(2015:2026) |> lapply(
+#   \(z){
+#     if(z>=2020){
+#       w=intercensal_mun_2020|> dplyr::mutate(Municipio=stringr::str_squish (gsub('\\*','',Municipio)))
+#     }
+#     else{
+#       w=intercensal_mun_2015_2 |> dplyr::mutate(Municipio=stringr::str_squish (gsub('\\*','',Municipio)))
+#     }
+#     w$Año=z
+#     return(w)
+#   }
+# )
+#poblacion_por_años_municipal=do.call(rbind,poblacion_por_años_municipal)
 hidalgo_municipal_2025_2$Municipio |> unique() |> lapply(\(w){w%in%poblacion_por_años_municipal$Municipio}) |> unlist() |> all()
 
 hidalgo_municipal_2025_2=hidalgo_municipal_2025_2 |> 
