@@ -544,7 +544,7 @@ Promesa_Actual_Actualizamos_Area.then(()=>{
   poligonos_map_h.resetStyle()
   refrescarSeleccionMunicipios()
 })
-  ActualizarSoloGraficaIncidenciaMensualMunicipal(valor_tipo,valor_año,'Pachuca de Soto')//municipio_actual)
+  ActualizarSoloGraficaIncidenciaMensualMunicipal(valor_tipo,valor_año,municipio_actual)
 }
   //---------------------------------------------------
 $("#año_dropdown").change(function () {
@@ -576,7 +576,6 @@ $("#tipo_dropdown").change(function () {
   //Creamos una con los datos actualizados
   ActualizarGraficaHistoricoEstatal(this.value)
   delito_actual=this.value
-  municipio_actual='Pachuca de Soto'
   //Repetimos para la municipal
   ActualizarGraficaHistoricoMunicipal(this.value,municipio_actual)
   // Forzar actualización .
@@ -607,16 +606,14 @@ $("#año_dropdown, #tipo_dropdown").change(function (){
   ///Todo esto se puede simplificar. Solo es cambiar los colores del geojson dependiendo del año y tipo de delito.
   //si cambia cualquiera de los dos, los anteriores lidian con las gráficas. Ahora generamos la promesa
 
-  ActualizarGraficaIncidenciaMensualMunicipal(valor_tipo, valor_año)
+  ActualizarSoloGraficaIncidenciaMensualMunicipal(valor_tipo, valor_año, municipio_actual)
 
   
   // // Forzar actualización .
 
   force_click_on_nav();
   // document.getElementById('scroll_de_barplot_tipos').scrollTop=0
-  colorearMapaEntidades(delito_actual=valor_tipo,año_actual=valor_año)
-  //limpiarTodasLasSelecciones()
-  refrescarSeleccionadas()
+  colorearMapaMunicipios(delito_actual=valor_tipo,año_actual=valor_año)
 
       
 })

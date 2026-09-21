@@ -42,7 +42,7 @@ victimas_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Víctimas",ful
 #datos_victimas_2026=read.csv(victimas_2026,check.names = F,fileEncoding = "latin1")
 ##Le pegamos la poblacion a cada bloque de 5 años. 
 datos_estatal_2025=read.csv(archivo_2025[1],check.names = F,fileEncoding = "latin1") |> 
-  rbind(read.csv(archivo_2026[4],check.names = F,fileEncoding = "utf-8"))
+  rbind(read.csv(archivo_2026[6],check.names = F,fileEncoding = "utf-8"))
 hidalgo_municipal_2025=datos_estatal_2025|>
   dplyr::filter(Clave_Ent==13) |> 
   dplyr::filter(`Cve. Municipio`<13100)
@@ -77,18 +77,18 @@ poblacion_por_años=conapo_proy_pob |>
 
 #el de 2020:2025 tambien
 #nacional2020 =nacional2020 |> dplyr::rename(`Población total`=`2020...9`)
-poblacion_por_años=c(2015:2026) |> lapply(
-  \(z){
-    if(z>=2020){
-      w=nacional2020
-    }
-    else{
-      w=intercensal_nac_2015_2
-    }
-    w$Año=z
-    return(w)
-  }
-)
+# poblacion_por_años=c(2015:2026) |> lapply(
+#   \(z){
+#     if(z>=2020){
+#       w=nacional2020
+#     }
+#     else{
+#       w=intercensal_nac_2015_2
+#     }
+#     w$Año=z
+#     return(w)
+#   }
+# )
 
 #poblacion_por_años=do.call(rbind,poblacion_por_años)
 ##Línea para verificar que las entidades estén bien escritas

@@ -170,8 +170,8 @@ function seleccionarMunicipioDefault(nombre) {
 function limpiarMunicipios() {
     poligonos_map_h.resetStyle();
     municipiosSeleccionados.clear();
-    // Volvemos a seleccionar el default si es necesario
-    seleccionarMunicipioDefault('Pachuca de Soto');
+    // Conservamos el municipio que alimenta las gráficas.
+    seleccionarMunicipioDefault(municipio_actual);
     info.update(); 
 }
 function refrescarSeleccionMunicipios() {
@@ -257,4 +257,3 @@ L.control.watermark = function(opts) {
 }
 
 L.control.watermark({ position: 'bottomleft' }).addTo(map_h);
-
