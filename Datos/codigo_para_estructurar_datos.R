@@ -30,7 +30,7 @@ datos_estatal_2025=datos_estatal_2025|>
 ##Lo hacemos con joins mejor
 
 ##// Cambiamos a CONAPO
-conapo_proy_pob="../../../Reutilizables/Demograficos/CONAPO_pobproy_quinq.csv" |> read.csv()
+conapo_proy_pob="../Datos/CONAPO_pobproy_quinq.csv" |> read.csv()
 conapo_proy_pob=conapo_proy_pob |> 
   dplyr::filter(ANO%in%c(2015:curr_year)) |> 
   dplyr::select(CLAVE,NOM_ENT,NOM_MUN,ANO:POB_TOTAL) |> 
