@@ -1,51 +1,21 @@
-
-##### nacional 2015
-intercensal_nac_2015=readxl::read_excel("intercensal_2015.xls")
-intercensal_nac_2015_2=intercensal_nac_2015|>
-  dplyr::select(`Entidad federativa`,`Grupos quinquenales de edad`,`Población total`,Estimador)|>
-  dplyr::filter(!is.na(`Entidad federativa`) & `Entidad federativa`!='Estados Unidos Mexicanos')|>
-  dplyr::filter(Estimador=='Valor')|>
-  dplyr::filter(`Grupos quinquenales de edad`=='Total')|>
-  dplyr::mutate(`Entidad federativa`=substr(`Entidad federativa`,4,nchar(`Entidad federativa`)))|>
-  dplyr::select(-Estimador,-`Grupos quinquenales de edad`)
-
-##nacional 2020
-nacional2020=readxl::read_excel("nacional_2015_2020.xlsx")
-nacional2020=nacional2020|>
-  dplyr::select(`Entidad federativa`,`Grupo quinquenal de edad`,`2020...9`)|>
-  dplyr::filter(`Entidad federativa`!='Estados Unidos Mexicanos')|>
-  dplyr::filter(`Grupo quinquenal de edad`=='Total')|>
-  dplyr::select(-`Grupo quinquenal de edad`)
+curr_year=format(Sys.Date(), "%Y")
 
 
-## municipal 2015
-intercensal_mun_2015=readxl::read_excel("intercensal_hidalgo_2015.xls")
-intercensal_mun_2015_2=intercensal_mun_2015|>
-  dplyr::select(Municipio,`Grupos quinquenales de edad`,Estimador,`Población total`)|>
-  dplyr::filter(!is.na(`Municipio`) & Municipio!='Total')|>
-  dplyr::filter(Estimador=='Valor')|>
-  dplyr::filter(`Grupos quinquenales de edad`=='Total')|>
-  dplyr::mutate(Municipio=substr(Municipio,5,nchar(Municipio)))|>
-  dplyr::select(-Estimador)|>
-  dplyr::select(-`Grupos quinquenales de edad`)
-
-
-
-## municipal 2020
-intercensal_mun_2020=readxl::read_excel("Banco de datos infografias _Eduardo.xlsx")
-intercensal_mun_2020=intercensal_mun_2020|>
-  dplyr::select(Municipio,`Población total`)|>
-  dplyr::filter(!is.na(Municipio)& Municipio!='Estatal')
-archivo_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Delitos",full.names = T) |> rev()
+archivo_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Delitos",full.names = T) 
 archivo_2025=list.files("../Datos/Preliminares/",pattern = "2025",full.names = T)
-victimas_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Víctimas",full.names = T)
+#victimas_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Víctimas",full.names = T)
 #datos_victimas_2026=read.csv(victimas_2026,check.names = F,fileEncoding = "latin1")
 ##Le pegamos la poblacion a cada bloque de 5 años. 
-datos_estatal_2025=read.csv(archivo_2025[1],check.names = F,fileEncoding = "latin1") |> 
-  rbind(read.csv(archivo_2026[6],check.names = F,fileEncoding = "utf-8"))
+datos_estatal_2025=data.table::fread(archivo_2025[1],encoding = "Latin-1") |> 
+rbind(data.table::fread(archivo_2026[1],encoding = "UTF-8"))
 hidalgo_municipal_2025=datos_estatal_2025|>
   dplyr::filter(Clave_Ent==13) |> 
-  dplyr::filter(`Cve. Municipio`<13100)
+  dplyr::filter(`Cve. Municipio`<13100) |> 
+  rbind(
+    datos_estatal_2026|>
+      dplyr::filter(Clave_Ent==13) |> 
+      dplyr::filter(`Cve. Municipio`<13100)
+  )
 datos_estatal_2025 |> colnames()
 datos_estatal_2025=datos_estatal_2025 |> 
   dplyr::mutate(dplyr::across(Enero:Diciembre,as.numeric))
@@ -62,7 +32,7 @@ datos_estatal_2025=datos_estatal_2025|>
 ##// Cambiamos a CONAPO
 conapo_proy_pob="../../../Reutilizables/Demograficos/CONAPO_pobproy_quinq.csv" |> read.csv()
 conapo_proy_pob=conapo_proy_pob |> 
-  dplyr::filter(ANO%in%c(2015:2026)) |> 
+  dplyr::filter(ANO%in%c(2015:curr_year)) |> 
   dplyr::select(CLAVE,NOM_ENT,NOM_MUN,ANO:POB_TOTAL) |> 
   dplyr::group_by(CLAVE,NOM_ENT,NOM_MUN,ANO) |> 
   dplyr::summarise(pobtot=sum(POB_TOTAL,na.rm = T)) |> 
@@ -234,9 +204,9 @@ tasa_mpio |>
   write.csv("../Datos/CSVs_2/Municipal_Año_y_Tipo.csv",fileEncoding = "UTF-8",row.names = F)
 
 delitos_2015_2025=(datos_estatal_2025 |> 
-  dplyr::filter(Año!=2026))$`Tipo de delito` |> unique()
+  dplyr::filter(Año!=curr_year))$`Tipo de delito` |> unique()
 delitos_2026=(datos_estatal_2025 |> 
-  dplyr::filter(Año==2026))$`Tipo de delito` |> unique()
+  dplyr::filter(Año==curr_year))$`Tipo de delito` |> unique()
 delitos_sin_cambios=delitos_2015_2025[(delitos_2015_2025 |> lapply(\(z){z%in% delitos_2026}) |> unlist())]
 delitos_con_cambios=delitos_2015_2025[!(delitos_2015_2025 |> lapply(\(z){z%in% delitos_2026}) |> unlist())]
 #"Violación equiparada" "Violación simple"   ahora son Violación 
