@@ -8,6 +8,7 @@ export RENV_AUTOLOAD_ENABLED=FALSE
 # Clonar repo mediante el Token de GitHub
 git clone --depth 1 --single-branch --branch main https://${GH_TOKEN}@github.com/JairEsc/Seguridad_Tablero_Movil.git /app/repo
 #cd /app/repo
+mkdir -p /app/repo/Datos/Preliminares
 cd /app/repo/Estructura_Datos
 # Copiar scripts actualizados a la carpeta del repo si están fuera, o ejecutarlos directo
 rm -f .Rprofile
