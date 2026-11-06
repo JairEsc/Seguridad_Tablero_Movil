@@ -222,3 +222,4 @@ delitos_nuveos[delitos_nuveos!='Violación']
 #8 con seguimiento de 2026->
 
 #IDM=read.csv("Peticiones especiales/IDM_NM_ene25.csv",check.names = F,fileEncoding = "latin1")
+cat("Procesamiento realizado.\n")

@@ -51,7 +51,7 @@ if (is.na(article_body) || is.null(article_body)) {
 
 
 # 9) segundo ul
-uls <- xml_find_all(box_node, "./ul")
+uls <- xml_find_all(article_body, "./ul")
 if (length(uls) < 2) {
   stop("No se encontró al menos un segundo <ul> dentro de article-body.")
 }
