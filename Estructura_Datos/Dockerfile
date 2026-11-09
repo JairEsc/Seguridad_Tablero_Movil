@@ -1,4 +1,4 @@
-FROM rocker/r-ver:4.3.2
+FROM public.ecr.aws/posit/rstudio-sagemaker:ubuntu-26.04-std
 
 RUN apt-get update && apt-get install -y \
     git \
