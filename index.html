@@ -27,7 +27,7 @@
                 <ul >
                     <div style="background-color: rgba(0, 255, 255, 0);width: 21.5vw;display: flex;">
                         <p class="fuente_inegi" style="font-weight: bold;margin-left: 0.5vw;margin-right:0.5vw;font-size: small;">Fuente: </p>
-                        <p class="fuente_inegi">Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública. Datos Abiertos de Incidencia Delictiva</p>
+                        <p class="fuente_inegi" id="fecha_actualizacion_fuente">Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública. Datos Abiertos de Incidencia Delictiva</p>
                     </div>
                 </ul>
             </div>
@@ -156,7 +156,7 @@
                 <div id="contenedor_barplot_horizontal_titulo_select" style="width: 50vw;height: 2vh;display: flex;justify-content: center">
                     <p class="Titulos_graphs">Gráfico: Tasa de incidencia para Año</p>
                     <select style="position: relative;height: 2vh;margin-left: 0.5vw;display: block;" id="año_dropdown">
-                        <option value="2026">2026 (Hasta agosto)</option>
+                        <option value="2026">2026</option>
                         <option value="2025">2025</option>
                         <option value="2024">2024</option>
                         <option value="2023">2023</option>
@@ -200,6 +200,26 @@
         <script src="Scripts_extras/script_control_nav.js"></script>
         <script src="Scripts_extras/script_actualizar_charts.js"></script>
         <script src="Scripts_extras/script_revisar_dispositivo_movil.js"></script>
+        <script>
+            fetch("Estructura_Datos/ultima_actualizacion.txt")
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return response.arrayBuffer();
+                })
+                .then((contenido) => {
+                    const fuente = new TextDecoder("utf-8")
+                        .decode(contenido)
+                        .replace(/\s+/g, " ")
+                        .trim();
+                    if (!fuente) {
+                        throw new Error("El archivo de actualización está vacío.");
+                    }
+                    document.getElementById("fecha_actualizacion_fuente").textContent = fuente;
+                })
+                .catch((error) => console.error("No se pudo cargar la fecha de actualización:", error));
+        </script>
 
     </div>
     

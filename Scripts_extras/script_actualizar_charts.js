@@ -613,6 +613,7 @@ $("#año_dropdown, #tipo_dropdown").change(function (){
 
   force_click_on_nav();
   // document.getElementById('scroll_de_barplot_tipos').scrollTop=0
+  colorearMapaEntidades(delito_actual=valor_tipo,año_actual=valor_año)
   colorearMapaMunicipios(delito_actual=valor_tipo,año_actual=valor_año)
 
       

@@ -5,7 +5,17 @@ library(httr)
 
 url_base <- "https://www.gob.mx/sesnsp/acciones-y-programas/datos-abiertos-de-incidencia-delictiva"
 url_base <- GET(url_base, add_headers(`User-Agent` = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"))
-html <- read_html(url_base)
+html <- read_html(url_base,encoding = "UTF-8")
+
+# Guardar la fecha de actualización publicada en la página.
+fecha_node <- xml_find_first(
+  html,
+  ".//section[contains(concat(' ', normalize-space(@class), ' '), ' -box ')]//p"
+)
+if (is.na(fecha_node) || is.null(fecha_node)) {
+  stop("No se encontró la fecha de actualización en la página.")
+}
+fecha_ultima_actualizacion <- xml_text(fecha_node)
 
 # 1) body
 body_node <- html_node(html, "body")
@@ -74,6 +84,10 @@ texto <- xml_text(a_node)
 href <- xml_attr(a_node, "href")
 base_href <- sub("\\?.*$", "", href)
 download_url <- paste0(base_href, "?download=1")
-curl_download(download_url, destfile = "../Datos/Preliminares/delitos_municipal.zip", quiet = FALSE)
-
-unzip(zipfile ="../Datos/Preliminares/delitos_municipal.zip",exdir = "../Datos/Preliminares/" )
+if(
+  fecha_ultima_actualizacion!=readLines("ultima_actualizacion.txt") |> paste0(collapse = "\n")
+){
+  curl_download(download_url, destfile = "../Datos/Preliminares/delitos_municipal.zip", quiet = FALSE)
+  unzip(zipfile ="../Datos/Preliminares/delitos_municipal.zip",exdir = "../Datos/Preliminares/" )
+  writeLines(fecha_ultima_actualizacion, "ultima_actualizacion.txt")
+}
