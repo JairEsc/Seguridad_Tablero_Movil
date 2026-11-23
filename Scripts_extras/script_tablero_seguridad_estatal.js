@@ -154,6 +154,14 @@ Promise.all([cargandoDataAñoTipo,cargandoDataTasaMedia]).then(() => {
 
   chart_lineplot_año_por_tipo_estatal.data.datasets[1].data=dataGraficaHistorico.map((x)=>{return(Math.round(parseFloat(x[2])*100000)/100000)})
   chart_lineplot_año_por_tipo_estatal.update();
+  if (dataGraficaHistorico.length <= 2) {
+    const canvas = document.getElementById("lineplot_año_por_tipo_estatal");
+    canvas.style.backgroundImage = 'url("Datos/few_data.png")';
+    canvas.style.backgroundRepeat = "no-repeat";
+    canvas.style.backgroundPosition = "center";
+    canvas.style.backgroundSize = "contain";
+    canvas.style.backgroundColor = "transparent";
+  }
 });
 
 Promise.all([cargandoDataAñoTipo,cargadoDataMesesEstatal]).then(()=>{

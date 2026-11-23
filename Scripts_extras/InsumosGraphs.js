@@ -52,9 +52,8 @@ function generarInsumosHistoricoMunicipal(tipo_de_delito,municipio){
     //Regresa un vector de (longitud 2015-2025/2026) x 2 (tasa Hgo y tasa Nacional)
     const filtroPorTipoDeDelito=data_municipal_año_tipo_municipio.filter((r)=>{
         const tipo_de_delito_r=r.replace(/"/g,'').split(",")[1];
-        //const año_r=r.replace(/"/g,'').split(",")[0];
         const municipio_r=r.replace(/"/g,'').split(",")[2];
-        return(municipio_r==municipio && tipo_de_delito_r==tipo_de_delito && r.replace(/"/g,'').split(",")[0]!=2026)
+        return(municipio_r==municipio && tipo_de_delito_r==tipo_de_delito)
     })
     return filtroPorTipoDeDelito.map((r)=>{return[parseInt(r.split(",")[0]),parseFloat(r.split(",")[4]),parseFloat(r.split(",")[5])]})//Año, Hgo, Nacional
 }

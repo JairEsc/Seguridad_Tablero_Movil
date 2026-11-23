@@ -142,6 +142,14 @@ LargeCsvCargado.then(() => {//Barra horizontal de tipos por año.
       },
     },
   });
+  if (primer_historico_mun.length <= 2) {
+    const canvas = document.getElementById("lineplot_año_por_tipo_municipal");
+    canvas.style.backgroundImage = 'url("Datos/few_data.png")';
+    canvas.style.backgroundRepeat = "no-repeat";
+    canvas.style.backgroundPosition = "center";
+    canvas.style.backgroundSize = "contain";
+    canvas.style.backgroundColor = "transparent";
+  }
 
   var año_sel_promesa = 2026;
   var tipo_sel_promesa = delito_actual;

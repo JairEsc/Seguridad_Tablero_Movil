@@ -1,0 +1,5 @@
+services:
+  proceso-delitos:
+    image: sigeh/ceieg:proceso-seguridad-delitos
+    env_file:
+      - .env

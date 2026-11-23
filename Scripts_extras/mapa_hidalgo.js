@@ -95,7 +95,7 @@ function style_seleccionado_h(layer) {
     layer.setStyle({
         weight: 4,
         color: '#000000', // Borde negro para resaltar
-        fillOpacity: 0.7,
+        //fillOpacity: 0.7,
         dashArray: '0' 
     });
     if (layer.bringToFront) layer.bringToFront();
@@ -131,8 +131,7 @@ function highlightFeature_h(e) {
     if (!municipiosSeleccionados.has(layer)) {
         layer.setStyle({
             weight: 3,
-            color: '#666',
-            fillOpacity: 0.5
+            color: '#000000'
         });
     }
 }

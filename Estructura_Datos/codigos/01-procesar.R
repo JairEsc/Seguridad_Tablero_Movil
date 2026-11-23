@@ -5,15 +5,23 @@ archivo_2025=list.files("../Datos/Preliminares/",pattern = "2025",full.names = T
 #victimas_2026=list.files("../Datos/Preliminares/",pattern = "RNID-Víctimas",full.names = T)
 #datos_victimas_2026=read.csv(victimas_2026,check.names = F,fileEncoding = "latin1")
 ##Le pegamos la poblacion a cada bloque de 5 años. 
-datos_estatal_2025=data.table::fread(archivo_2025[1],encoding = "UTF-8") 
-datos_estatal_2026=data.table::fread(archivo_2026[1],encoding = "UTF-8") 
+datos_estatal_2025=data.table::fread(archivo_2025[3],encoding = "UTF-8")
+datos_estatal_2025=datos_estatal_2025 |>
+  dplyr::select(Año,Clave_Ent,Entidad,`Cve. Municipio`,Municipio,`Tipo de delito`,Enero:Diciembre)|>
+  dplyr::mutate(dplyr::across(Enero:Diciembre,as.numeric)) |>
+  dplyr::group_by(Año,Clave_Ent,Entidad,`Cve. Municipio`,Municipio,`Tipo de delito`)|>
+  dplyr::summarise_all(sum)
+datos_estatal_2025 |>
+  dplyr::mutate(Municipio=ifelse(Entidad=='Hidalgo',Municipio, "-")) |>
+  dplyr::group_by(Año,Entidad,Municipio,`Tipo de delito`) |>
+  dplyr::summarise_all(sum)|> write.csv("../Datos/Preliminares/RNID-Delitos_Municipal-Delitos-2015-2025.csv",fileEncoding = "UTF-8",row.names = F)
+datos_estatal_2026=data.table::fread(archivo_2026[1],encoding = "UTF-8")
 
 datos_estatal_2025=datos_estatal_2025 |> 
   rbind(datos_estatal_2026,fill=T)
 
 hidalgo_municipal_2025=datos_estatal_2025|>
-  dplyr::filter(Clave_Ent==13) |> 
-  dplyr::filter(`Cve. Municipio`<13100)
+  dplyr::filter(Entidad=="Hidalgo") 
 datos_estatal_2025 |> colnames()
 datos_estatal_2025=datos_estatal_2025 |> 
   dplyr::mutate(dplyr::across(Enero:Diciembre,as.numeric))
@@ -22,7 +30,8 @@ datos_estatal_2025$`Tipo de delito`[datos_estatal_2025$`Tipo de delito`%in%c(
   "Violación equiparada","Violación simple" 
 )] ="Violación" 
 datos_estatal_2025=datos_estatal_2025|>
-  dplyr::select(Año,Entidad,`Tipo de delito`,Enero:total)|>
+  dplyr::select(Año,Entidad,`Tipo de delito`,Enero:Diciembre,total)|>
+  dplyr::ungroup() |> 
   dplyr::group_by(Año,Entidad,`Tipo de delito`)|>
   dplyr::summarise_all(sum)
 ##Lo hacemos con joins mejor
@@ -221,3 +230,4 @@ delitos_nuveos[delitos_nuveos!='Violación']
 
 #IDM=read.csv("Peticiones especiales/IDM_NM_ene25.csv",check.names = F,fileEncoding = "latin1")
 cat("Procesamiento realizado.\n")
+

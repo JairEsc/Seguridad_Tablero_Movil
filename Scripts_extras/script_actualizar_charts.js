@@ -60,7 +60,7 @@ ActualizarGraficaHistoricoEstatal=function(tipo_de_delito){
   });
   chart_lineplot_año_por_tipo_estatal.data.datasets[1].data=historico_actual.map((x)=>{return(Math.round(parseFloat(x[2])*100000)/100000)})
   chart_lineplot_año_por_tipo_estatal.update();
-  if(historico_actual.length==0){
+  if(historico_actual.length<=2){
       //console.log("Ni siquiera hay datos porque es delito nuevo")
       //"Ni siquiera hay datos porque es delito nuevo"
       const canvas = document.getElementById('lineplot_año_por_tipo_estatal');
@@ -157,7 +157,7 @@ ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito,municipio_actual){
           borderColor: "rgb(9, 86, 70)",
           borderWidth: 1,
           spanGaps: true,
-          label: ["Tasa de delito por cada mil habitantes (Pachuca de Soto)"],
+          label: ["Tasa de delito por cada mil habitantes ("+municipio_actual+")"],
         },
         {
           data: historico_actual_mun.map((x) => x[2]).map((x)=>{return(Math.round(parseFloat(x)*100000)/100000)}),
@@ -191,7 +191,7 @@ ActualizarGraficaHistoricoMunicipal=function(tipo_de_delito,municipio_actual){
     },
   });
   //console.log(historico_actual_mun)
-  if(historico_actual_mun.length==0){
+  if(historico_actual_mun.length<=2){
       console.log("Ni siquiera hay datos porque es delito nuevo")
       //"Ni siquiera hay datos porque es delito nuevo"
       const canvas = document.getElementById('lineplot_año_por_tipo_municipal');
